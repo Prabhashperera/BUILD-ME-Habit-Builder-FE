@@ -16,7 +16,7 @@ const SignupPage = () => {
             <div className="relative w-full max-w-4xl bg-[#111827]/80 backdrop-blur-xl border border-violet-500/20 rounded-3xl shadow-[0_0_40px_-10px_rgba(139,92,246,0.3)] overflow-hidden grid lg:grid-cols-5">
 
                 {/* --- Left Side Visuals (Mastery Context) --- */}
-                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center items-center p-12 bg-gradient-to-br from-violet-900/40 via-[#0F172A]/90 to-fuchsia-900/40 relative overflow-hidden">
+                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center items-center p-12 bg-linear-to-br from-violet-900/40 via-[#0F172A]/90 to-fuchsia-900/40 relative overflow-hidden">
                     {/* Pattern Overlay - Stars/Dots */}
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
 
@@ -27,7 +27,7 @@ const SignupPage = () => {
                         </div>
 
                         <h2 className="text-3xl font-extrabold text-white tracking-tight">
-                            Build Me<br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">Make Habits</span>
+                            Build Me<br /> <span className="text-transparent bg-clip-text bg-linear-to-r from-violet-400 to-fuchsia-400">Make Habits</span>
                         </h2>
 
                         <p className="text-violet-200/60 text-sm max-w-xs mx-auto leading-relaxed">
@@ -41,7 +41,7 @@ const SignupPage = () => {
                                 <Crown className="w-4 h-4 text-amber-400" />
                             </div>
                             <div className="flex items-center gap-3 mb-3">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                <div className="w-10 h-10 rounded-full bg-linear-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
                                     1
                                 </div>
                                 <div>
@@ -51,7 +51,7 @@ const SignupPage = () => {
                             </div>
                             {/* Fake XP Bar */}
                             <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                                <div className="bg-gradient-to-r from-violet-500 to-fuchsia-400 h-1.5 w-[15%] shadow-[0_0_10px_rgba(232,121,249,0.5)]"></div>
+                                <div className="bg-linear-to-r from-violet-500 to-fuchsia-400 h-1.5 w-[15%] shadow-[0_0_10px_rgba(232,121,249,0.5)]"></div>
                             </div>
                         </div>
                     </div>
@@ -120,7 +120,7 @@ const SignupPage = () => {
 
                         {/* Action Button - Violet to Pink Gradient */}
                         <Link to={"/login"}>
-                            <button type="button" className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-4 rounded-lg shadow-[0_0_20px_-5px_rgba(192,38,211,0.4)] transform transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group uppercase tracking-wider text-sm mt-7 cursor-pointer">
+                            <button type="button" className="w-full bg-linear-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-4 rounded-lg shadow-[0_0_20px_-5px_rgba(192,38,211,0.4)] transform transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group uppercase tracking-wider text-sm mt-7 cursor-pointer">
                                 <span>Initialize Account</span>
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </button>

@@ -16,7 +16,7 @@ const LoginPage = () => {
             <div className="relative w-full max-w-4xl bg-slate-900/80 backdrop-blur-xl border border-emerald-500/20 rounded-3xl shadow-[0_0_40px_-10px_rgba(16,185,129,0.3)] overflow-hidden grid lg:grid-cols-5">
 
                 {/* --- Left Side Visuals (Habit/Growth Context) --- */}
-                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center items-center p-12 bg-gradient-to-br from-emerald-900/40 via-slate-900/80 to-teal-900/40 relative overflow-hidden">
+                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center items-center p-12 bg-linear-to-br from-emerald-900/40 via-slate-900/80 to-teal-900/40 relative overflow-hidden">
                     {/* Pattern Overlay */}
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10 mix-blend-overlay"></div>
 
@@ -36,7 +36,7 @@ const LoginPage = () => {
 
                         {/* Gamified "Streak" Decoration Card */}
                         <div className="mt-10 p-3 bg-slate-950/60 rounded-xl border border-emerald-500/20 w-full max-w-[220px] flex items-center gap-4 shadow-lg transform hover:scale-105 transition-transform cursor-default">
-                            <div className="bg-gradient-to-br from-orange-500 to-red-500 p-2.5 rounded-lg shadow-orange-500/20 shadow-lg">
+                            <div className="bg-linear-to-br from-orange-500 to-red-500 p-2.5 rounded-lg shadow-orange-500/20 shadow-lg">
                                 <Zap className="w-5 h-5 text-white fill-white" />
                             </div>
                             <div className="text-left">
