@@ -1,10 +1,20 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import AuthLayout from "./layouts/AuthLayout"
+import SignupPage from "./pages/SignupPage"
+import LoginPage from "./pages/LoginPage"
 
 function App() {
 
   return (
-    <>
-      <h1 className="bg-amber-900">Hello</h1>
-    </>
+    <BrowserRouter>
+      <Routes>
+        {/* Auth Routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
