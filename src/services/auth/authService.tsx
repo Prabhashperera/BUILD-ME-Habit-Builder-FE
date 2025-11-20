@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/auth"
+import api from "../../api/axiosConfig";
 
 interface IUserData {
     userName: string,
@@ -10,7 +9,7 @@ interface IUserData {
 
 export const signUpUser = async (userData: IUserData) => {
     try {
-        const response = await axios.post(`${API_URL}/signup`, userData)
+        const response = await api.post("auth/signup", userData)
         return response.data
 
     } catch (error: unknown) {

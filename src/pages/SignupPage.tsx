@@ -1,10 +1,49 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Mail, Lock, User, Rocket, ArrowRight, Github, Star, Crown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signupUser } from '../store/slices/authSlice';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+
 
 const SignupPage = () => {
-    // UI Only - No Logic
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch<any>()
+    const { isLoading, data, error } = useSelector((state: any) => state.auth)
+    const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleSignUp = () => {
+        dispatch(
+            signupUser({
+                userName,
+                email,
+                password
+            })
+        )
+    }
+
+    // After Successfull Signup redirect to login page
+    useEffect(() => {
+        if (data) {
+            toast.success("Account created successfully!");
+            navigate("/login")
+        }
+        if (error) {
+            toast.error(error);
+        }
+    }, [data, error, navigate])
+
+
+
+    // -------------------------------------
     return (
         <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+
 
             {/* --- Cosmic Theme Background Glows (Violet/Pink) --- */}
             {/* Top Right Glow - Violet */}
@@ -83,6 +122,8 @@ const SignupPage = () => {
                                     placeholder="MasterMind"
                                     className="w-full bg-[#0B0F19]/50 border border-slate-700 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all placeholder-slate-600"
                                     autoComplete="off"
+                                    value={userName}
+                                    onChange={(e) => setUserName(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -99,6 +140,8 @@ const SignupPage = () => {
                                     placeholder="you@example.com"
                                     className="w-full bg-[#0B0F19]/50 border border-slate-700 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all placeholder-slate-600"
                                     autoComplete="off"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -114,17 +157,19 @@ const SignupPage = () => {
                                     type="password"
                                     placeholder="Create a strong password"
                                     className="w-full bg-[#0B0F19]/50 border border-slate-700 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all placeholder-slate-600"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
                         </div>
 
                         {/* Action Button - Violet to Pink Gradient */}
-                        <Link to={"/login"}>
-                            <button type="button" className="w-full bg-linear-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-4 rounded-lg shadow-[0_0_20px_-5px_rgba(192,38,211,0.4)] transform transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group uppercase tracking-wider text-sm mt-7 cursor-pointer">
-                                <span>Initialize Account</span>
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        </Link>
+                        {/* <Link to={"/login"}> */}
+                        <button onClick={handleSignUp} disabled={isLoading} type="button" className="w-full bg-linear-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-4 rounded-lg shadow-[0_0_20px_-5px_rgba(192,38,211,0.4)] transform transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group uppercase tracking-wider text-sm mt-7 cursor-pointer">
+                            <span>Initialize Account</span>
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                        {/* </Link> */}
                     </form>
 
                     {/* Divider */}
