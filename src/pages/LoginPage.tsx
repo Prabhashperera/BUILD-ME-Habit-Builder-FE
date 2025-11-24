@@ -1,8 +1,45 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Mail, Lock, Sprout, ChevronRight, Github, TrendingUp, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../store/slices/authSlice';
+import { toast } from 'react-toastify';
+
 
 const LoginPage = () => {
-    // UI Only - No Logic
+    const dispatch = useDispatch<any>()
+    const { isLoading, data, error } = useSelector((state: any) => state.auth)
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
+    const handlleLogin = (e: any) => {
+        e.preventDefault();
+        console.log("Handlle Login");
+        dispatch(
+            loginUser({
+                email,
+                password
+            })
+        )
+    }
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (data) {
+            toast.success("Login Success")
+            navigate("/habits")
+            console.log(data);
+        }
+
+        if (error) {
+            toast.error(error);
+        }
+
+    }, [data, error, navigate])
+
+
     return (
         <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden font-sans">
 
@@ -75,6 +112,8 @@ const LoginPage = () => {
                                     placeholder="achiever@habitapp.com"
                                     className="w-full bg-slate-950/50 border border-slate-700 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder-slate-600"
                                     autoComplete="off"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -93,12 +132,14 @@ const LoginPage = () => {
                                     type="password"
                                     placeholder="••••••••"
                                     className="w-full bg-slate-950/50 border border-slate-700 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder-slate-600"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
                         </div>
 
                         {/* Action Button - Green Gradient for "Go/Growth" */}
-                        <button type="button" className="w-full bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-4 rounded-lg shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] transform transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group uppercase tracking-wider text-sm cursor-pointer">
+                        <button onClick={handlleLogin} disabled={isLoading} type="button" className="w-full bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-4 rounded-lg shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)] transform transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group uppercase tracking-wider text-sm cursor-pointer">
                             <span>Log Workout / Habit</span>
                             <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </button>
@@ -129,7 +170,7 @@ const LoginPage = () => {
                     {/* Footer Link */}
                     <Link to={"/signup"} >
                         <p className="mt-8 text-center text-slate-500 text-sm">
-                            Ready to start growing? <a href="#" className="text-emerald-400 hover:text-emerald-300 font-bold hover:underline transition-colors">Start your journey</a>
+                            Ready to start growing? <span className="text-emerald-400 hover:text-emerald-300 font-bold hover:underline transition-colors">Start your journey</span>
                         </p>
                     </Link>
                 </div>

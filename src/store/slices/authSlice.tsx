@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { signUpUser } from "../../services/auth/authService";
+import { signUpUser, loginUsers } from "../../services/auth/authService";
 
 
 interface AuthState {
@@ -29,6 +29,20 @@ export const signupUser = createAsyncThunk(
     }
 );
 
+// Async thunk for Login
+export const loginUser = createAsyncThunk(
+    "auth/loginUser",
+    async (userData: { email: string; password: string }, { rejectWithValue }) => {
+        try {
+            const response = await loginUsers(userData);
+            return response;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 const authSlice = createSlice({
     name: "auth",
     initialState: initialState,
@@ -46,7 +60,21 @@ const authSlice = createSlice({
             .addCase(signupUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload as string;
+            })
+            // LOGIN
+            .addCase(loginUser.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(loginUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.data = action.payload;  // <-- makes your navigate() run 🎉
+            })
+            .addCase(loginUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload as string;
             });
+
     },
 })
 

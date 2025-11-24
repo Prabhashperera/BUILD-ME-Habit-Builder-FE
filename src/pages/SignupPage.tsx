@@ -197,7 +197,7 @@ const SignupPage = () => {
                     {/* Footer Link */}
                     <Link to={'/login'} >
                         <p className="mt-6 text-center text-slate-500 text-sm">
-                            Already initialized? <a href="#" className="text-fuchsia-400 hover:text-fuchsia-300 font-bold hover:underline transition-colors">Login Account</a>
+                            Already initialized? <span className="text-fuchsia-400 hover:text-fuchsia-300 font-bold hover:underline transition-colors">Login Account</span>
                         </p>
                     </Link>
                 </div>
