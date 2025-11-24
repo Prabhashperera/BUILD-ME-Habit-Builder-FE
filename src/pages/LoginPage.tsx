@@ -34,11 +34,13 @@ const LoginPage = () => {
             navigate("/habits")
         }
 
+    }, [data, navigate])
+
+    useEffect(() => {
         if (error) {
             toast.error(error);
         }
-
-    }, [data, error, navigate])
+    }, [error, navigate])
 
 
     return (
