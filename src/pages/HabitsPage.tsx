@@ -81,7 +81,7 @@ const HabitsPage = () => {
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">Level Up</span>
                     </div>
                     <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-none text-center">
-                        CHOOSE YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-400">BATTLES</span>
+                        CHOOSE YOUR <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 via-cyan-400 to-violet-400">BATTLES</span>
                     </h1>
                 </header>
 
