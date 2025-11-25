@@ -3,6 +3,7 @@ import { Moon, Utensils, BookOpen, Dumbbell } from 'lucide-react';
 
 export interface IHabit {
     id: number;
+    type: string;
     title: string;
     subtitle: string;
     description: string;
@@ -18,6 +19,7 @@ const habitsList: IHabit[] = [
     {
         id: 1,
         title: "Sleep Well",
+        type: "sleep",
         subtitle: "8 Hours Challenge",
         icon: Moon,
         color: "text-violet-400",
@@ -30,6 +32,7 @@ const habitsList: IHabit[] = [
     {
         id: 2,
         title: "Clean Eating",
+        type: "eat",
         subtitle: "No Skipping Meals",
         icon: Utensils,
         color: "text-orange-400",
@@ -42,6 +45,7 @@ const habitsList: IHabit[] = [
     {
         id: 3,
         title: "Read Daily",
+        type: "read",
         subtitle: "20 Pages / Day",
         icon: BookOpen,
         color: "text-sky-400",
@@ -54,6 +58,7 @@ const habitsList: IHabit[] = [
     {
         id: 4,
         title: "Gym & Cardio",
+        type: "gym",
         subtitle: "Sweat it out",
         icon: Dumbbell,
         color: "text-emerald-400",
