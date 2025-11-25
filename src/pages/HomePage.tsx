@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
     Moon, Utensils, BookOpen, Dumbbell,
     ChevronRight, Star,
-    Flame, Activity,
+    Flame,
     Clock, Book, Salad
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
@@ -205,17 +205,19 @@ const HomePage = () => {
                                 {currentHabit.type === 'sleep' && (
                                     <div className="space-y-6">
                                         <div className="grid grid-cols-2 gap-4">
+                                            {/* Slept Time */}
                                             <div className="p-4 rounded-2xl bg-slate-950/50 border border-white/5 hover:border-violet-500/30 transition-colors group">
-                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Hours Slept</label>
+                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Slept Time</label>
                                                 <div className="flex items-center gap-2">
-                                                    <Clock className="w-5 h-5 text-violet-400 group-focus-within:text-violet-300" />
-                                                    <input type="number" defaultValue="7.5" className="bg-transparent text-2xl font-bold text-white outline-none w-full" />
+                                                    <Clock className="w-5 h-5 text-violet-400" />
+                                                    <input type="time" defaultValue="21:00" className="bg-transparent text-lg font-bold text-white outline-none w-full" />
                                                 </div>
                                             </div>
+                                            {/* Wake up Time */}
                                             <div className="p-4 rounded-2xl bg-slate-950/50 border border-white/5 hover:border-violet-500/30 transition-colors group">
                                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Wake Up Time</label>
                                                 <div className="flex items-center gap-2">
-                                                    <Activity className="w-5 h-5 text-violet-400" />
+                                                    <Clock className="w-5 h-5 text-violet-400" />
                                                     <input type="time" defaultValue="07:00" className="bg-transparent text-lg font-bold text-white outline-none w-full" />
                                                 </div>
                                             </div>

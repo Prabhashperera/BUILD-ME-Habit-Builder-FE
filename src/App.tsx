@@ -5,6 +5,8 @@ import LoginPage from "./pages/LoginPage"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import HabitsPage from "./pages/HabitsPage";
+import HomePage from "./pages/HomePage";
+import HomeLayout from "./layouts/HomeLayout";
 
 function App() {
 
@@ -28,6 +30,10 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/habits" element={<HabitsPage />} />
+        </Route>
+        {/* Home Page Routes */}
+        <Route element={<HomeLayout />}>
+          <Route path="/home" element={<HomePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
