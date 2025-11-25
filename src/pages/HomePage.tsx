@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Flame, Clock, Book, Salad } from 'lucide-react';
-import Navbar from '../components/Navbar';
 import SelectedHabbits from '../components/SelectedHabbits';
 import habitsForHomePage from '../data/HabitsListForHomePage';
 
@@ -12,19 +11,7 @@ const HomePage = () => {
     const currentHabit = habitsForHomePage.find(h => h.id === activeTab) || habitsForHomePage[0];
 
     return (
-        <div className="min-h-screen w-full bg-slate-950 font-sans text-white selection:bg-emerald-500/30 pb-20 overflow-x-hidden relative">
-
-            {/* --- Ambient Background Glows --- */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] mix-blend-screen" />
-                <div className="absolute top-[20%] right-[-20%] w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[100px] mix-blend-screen" />
-                <div className="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-violet-500/5 rounded-full blur-[120px] mix-blend-screen" />
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03]"></div>
-            </div>
-
-            {/* --- 1. Top Navbar --- */}
-            <Navbar />
-
+        <div>
             <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-8 space-y-10">
 
                 {/* --- 2. Ongoing Habits Section (Grid) --- */}
