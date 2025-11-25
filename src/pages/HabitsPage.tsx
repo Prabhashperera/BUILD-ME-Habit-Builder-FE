@@ -1,65 +1,72 @@
 import { useState } from 'react';
-import { Moon, Utensils, BookOpen, Dumbbell, Check, Calendar, Sparkles, ArrowRight, Zap } from 'lucide-react';
+import { Check, Calendar, Sparkles, ArrowRight, Zap } from 'lucide-react';
+import habitsList from '../data/habitsList'; //Habits List
 
 const HabitsPage = () => {
-    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [selectedHabitsIds, setSelectedIds] = useState<number[]>([]);
 
+    // Selected Habits id Stores in a state
     const toggleHabit = (id: number) => {
-        setSelectedIds(prev =>
-            prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+        setSelectedIds((prev) => prev.includes(id)
+            ? prev.filter(item => item !== id)
+            : [...prev, id]
         );
     };
 
-    const habits = [
-        {
-            id: 1,
-            title: "Sleep Well",
-            subtitle: "8 Hours Challenge",
-            icon: Moon,
-            color: "text-violet-400",
-            gradient: "from-violet-500/20 to-purple-500/5",
-            activeBorder: "border-violet-500",
-            description: "Deep sleep cycles",
-            points: 25,
-            days: 30
-        },
-        {
-            id: 2,
-            title: "Clean Eating",
-            subtitle: "No Skipping Meals",
-            icon: Utensils,
-            color: "text-orange-400",
-            gradient: "from-orange-500/20 to-amber-500/5",
-            activeBorder: "border-orange-500",
-            description: "Fuel your body right",
-            points: 25,
-            days: 30
-        },
-        {
-            id: 3,
-            title: "Read Daily",
-            subtitle: "20 Pages / Day",
-            icon: BookOpen,
-            color: "text-sky-400",
-            gradient: "from-sky-500/20 to-blue-500/5",
-            activeBorder: "border-sky-500",
-            description: "Expand your mind",
-            points: 25,
-            days: 30
-        },
-        {
-            id: 4,
-            title: "Gym & Cardio",
-            subtitle: "Sweat it out",
-            icon: Dumbbell,
-            color: "text-emerald-400",
-            gradient: "from-emerald-500/20 to-teal-500/5",
-            activeBorder: "border-emerald-500",
-            description: "Build strength",
-            points: 25,
-            days: 30
-        }
-    ];
+    // const habits = [
+    //     {
+    //         id: 1,
+    //         title: "Sleep Well",
+    //         subtitle: "8 Hours Challenge",
+    //         icon: Moon,
+    //         color: "text-violet-400",
+    //         gradient: "from-violet-500/20 to-purple-500/5",
+    //         activeBorder: "border-violet-500",
+    //         description: "Deep sleep cycles",
+    //         points: 25,
+    //         days: 30
+    //     },
+    //     {
+    //         id: 2,
+    //         title: "Clean Eating",
+    //         subtitle: "No Skipping Meals",
+    //         icon: Utensils,
+    //         color: "text-orange-400",
+    //         gradient: "from-orange-500/20 to-amber-500/5",
+    //         activeBorder: "border-orange-500",
+    //         description: "Fuel your body right",
+    //         points: 25,
+    //         days: 30
+    //     },
+    //     {
+    //         id: 3,
+    //         title: "Read Daily",
+    //         subtitle: "20 Pages / Day",
+    //         icon: BookOpen,
+    //         color: "text-sky-400",
+    //         gradient: "from-sky-500/20 to-blue-500/5",
+    //         activeBorder: "border-sky-500",
+    //         description: "Expand your mind",
+    //         points: 25,
+    //         days: 30
+    //     },
+    //     {
+    //         id: 4,
+    //         title: "Gym & Cardio",
+    //         subtitle: "Sweat it out",
+    //         icon: Dumbbell,
+    //         color: "text-emerald-400",
+    //         gradient: "from-emerald-500/20 to-teal-500/5",
+    //         activeBorder: "border-emerald-500",
+    //         description: "Build strength",
+    //         points: 25,
+    //         days: 30
+    //     }
+    // ];
+
+    const handleClickStart = () => {
+        localStorage.setItem("habitsList", JSON.stringify(selectedHabitsIds))
+    }
 
     return (
         <div className="h-screen w-screen bg-slate-950 font-sans selection:bg-emerald-500/30 flex flex-col relative overflow-hidden">
@@ -89,8 +96,8 @@ const HabitsPage = () => {
                 {/* We use min-h-0 to allow the flex item to shrink and overflow-y-auto only if absolutely necessary on tiny screens */}
                 <main className="flex-1 min-h-0 w-full flex flex-col justify-center pb-24">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full max-h-[600px] w-full mx-auto">
-                        {habits.map((habit) => {
-                            const isSelected = selectedIds.includes(habit.id);
+                        {habitsList.map((habit) => {
+                            const isSelected = selectedHabitsIds.includes(habit.id);
                             return (
                                 <div
                                     key={habit.id}
@@ -158,14 +165,14 @@ const HabitsPage = () => {
             <div className={`
                 absolute bottom-6 left-0 right-0 z-50 px-4 md:px-6
                 transition-transform duration-500 ease-in-out
-                ${selectedIds.length > 0 ? 'translate-y-0' : 'translate-y-[150%]'}
+                ${selectedHabitsIds.length > 0 ? 'translate-y-0' : 'translate-y-[150%]'}
             `}>
                 <div className="max-w-xl mx-auto">
                     <div className="bg-slate-900/90 backdrop-blur-2xl border border-slate-700/50 rounded-2xl p-3 shadow-2xl flex items-center justify-between ring-1 ring-white/10">
 
                         <div className="flex items-center gap-4 pl-3">
                             <div className="flex items-baseline gap-2">
-                                <span className="text-3xl font-black text-white">{selectedIds.length}</span>
+                                <span className="text-3xl font-black text-white">{selectedHabitsIds.length}</span>
                                 <div className="flex flex-col leading-none">
                                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Selected</span>
                                     <span className="text-xs font-bold text-emerald-400">Habits</span>
@@ -178,7 +185,7 @@ const HabitsPage = () => {
                             px-6 py-3 text-white font-bold text-sm shadow-lg shadow-emerald-500/20
                             transition-all hover:scale-[1.02] active:scale-[0.95]
                             group whitespace-nowrap flex items-center gap-2
-                        ">
+                        " onClick={handleClickStart}>
                             <span>Start Journey</span>
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             {/* Shimmer */}
