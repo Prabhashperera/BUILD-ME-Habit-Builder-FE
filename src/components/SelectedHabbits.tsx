@@ -3,6 +3,14 @@ import habits from '../data/HabitsListForHomePage';
 
 
 function SelectedHabbits() {
+
+    // Filter Selcted Habits to Show them Only
+    const selectedHabitIds = JSON.parse(localStorage.getItem("habitsList") || "[]")
+    const selectedHabits = habits.filter((habit) => {
+        return selectedHabitIds.includes(habit.id)
+    })
+
+
     return (
         <div>
             <section>
@@ -14,7 +22,7 @@ function SelectedHabbits() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {habits.map((habit) => (
+                    {selectedHabits.map((habit) => (
                         <div
                             key={habit.id}
                             className={`

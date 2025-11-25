@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Check, Calendar, Sparkles, ArrowRight, Zap } from 'lucide-react';
 import habitsList from '../data/habitsList'; //Habits List
+import { Link } from 'react-router-dom';
 
 const HabitsPage = () => {
     const [selectedHabitsIds, setSelectedIds] = useState<number[]>([]);
@@ -128,18 +129,19 @@ const HabitsPage = () => {
                                 </div>
                             </div>
                         </div>
-
-                        <button className="
+                        <Link to={"/home"}>
+                            <button className="
                             relative overflow-hidden rounded-xl bg-linear-to-r from-emerald-500 to-cyan-600 
                             px-6 py-3 text-white font-bold text-sm shadow-lg shadow-emerald-500/20
                             transition-all hover:scale-[1.02] active:scale-[0.95]
                             group whitespace-nowrap flex items-center gap-2
                         " onClick={handleClickStart}>
-                            <span>Start Journey</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            {/* Shimmer */}
-                            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/20 to-transparent" />
-                        </button>
+                                <span>Start Journey</span>
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                {/* Shimmer */}
+                                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/20 to-transparent" />
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </div>
