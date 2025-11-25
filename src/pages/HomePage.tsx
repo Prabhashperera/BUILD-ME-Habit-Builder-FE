@@ -1,79 +1,15 @@
 import { useState } from 'react';
-import {
-    Moon, Utensils, BookOpen, Dumbbell,
-    Flame,
-    Clock, Book, Salad
-} from 'lucide-react';
+import { Flame, Clock, Book, Salad } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import SelectedHabbits from '../components/SelectedHabbits';
-// import habitsList from '../data/habitsList';
+import habitsForHomePage from '../data/HabitsListForHomePage';
 
 const HomePage = () => {
     // State to track the currently active habit tab for the logging form
     const [activeTab, setActiveTab] = useState(1);
 
-    // Mock Data for Habits
-    const habits = [
-        {
-            id: 1,
-            title: "Sleep Mastery",
-            icon: Moon,
-            color: "text-violet-400",
-            glowColor: "shadow-violet-500/20",
-            borderColor: "border-violet-500/30",
-            bgGradient: "from-violet-500/10 to-purple-500/5",
-            progress: 70, // %
-            daysCompleted: 21,
-            totalDays: 30,
-            points: 450,
-            type: "sleep"
-        },
-        {
-            id: 2,
-            title: "Clean Eating",
-            icon: Utensils,
-            color: "text-orange-400",
-            glowColor: "shadow-orange-500/20",
-            borderColor: "border-orange-500/30",
-            bgGradient: "from-orange-500/10 to-amber-500/5",
-            progress: 45,
-            daysCompleted: 14,
-            totalDays: 30,
-            points: 320,
-            type: "eating"
-        },
-        {
-            id: 3,
-            title: "Deep Reading",
-            icon: BookOpen,
-            color: "text-sky-400",
-            glowColor: "shadow-sky-500/20",
-            borderColor: "border-sky-500/30",
-            bgGradient: "from-sky-500/10 to-blue-500/5",
-            progress: 10,
-            daysCompleted: 3,
-            totalDays: 30,
-            points: 50,
-            type: "reading"
-        },
-        {
-            id: 4,
-            title: "Iron Temple",
-            icon: Dumbbell,
-            color: "text-emerald-400",
-            glowColor: "shadow-emerald-500/20",
-            borderColor: "border-emerald-500/30",
-            bgGradient: "from-emerald-500/10 to-teal-500/5",
-            progress: 85,
-            daysCompleted: 26,
-            totalDays: 30,
-            points: 600,
-            type: "exercise"
-        }
-    ];
-
     // Get the active habit object
-    const currentHabit = habits.find(h => h.id === activeTab) || habits[0];
+    const currentHabit = habitsForHomePage.find(h => h.id === activeTab) || habitsForHomePage[0];
 
     return (
         <div className="min-h-screen w-full bg-slate-950 font-sans text-white selection:bg-emerald-500/30 pb-20 overflow-x-hidden relative">
@@ -98,7 +34,7 @@ const HomePage = () => {
                 {/* --- 3. Dynamic Habit Switcher (Mini Navbar) --- */}
                 <section className="sticky top-20 z-40 bg-slate-950/80 backdrop-blur-xl border-y border-white/5 py-2 -mx-4 md:-mx-6 px-4 md:px-6">
                     <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-1">
-                        {habits.map((habit) => {
+                        {habitsForHomePage.map((habit) => {
                             const isActive = activeTab === habit.id;
                             return (
                                 <button
