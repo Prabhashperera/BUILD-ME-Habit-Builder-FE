@@ -73,11 +73,9 @@ function SelectedHabbits() {
                                     border-white/5 hover:border-white/20 overflow-hidden cursor-pointer
                                     ${habit.activeBorder} 
                                 `}
-                            // ^^^ FIXED: Matched 'activeBorder' from your new data file
                             >
                                 {/* Gradient Background */}
-                                {/* FIXED: Matched 'gradient' and used correct Tailwind syntax */}
-                                <div className={`absolute inset-0 bg-gradient-to-br ${habit.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                                <div className={`absolute inset-0 bg-linear-to-br ${habit.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
                                 <div className="relative z-10 flex flex-col h-full justify-between gap-4">
                                     {/* Header */}
