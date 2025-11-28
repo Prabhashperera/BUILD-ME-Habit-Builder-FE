@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Flame, Clock, Book, Salad } from 'lucide-react';
 import SelectedHabbits from '../components/SelectedHabbits';
 import habitsForHomePage from '../data/HabitsListForHomePage';
+import axios from 'axios';
 
 const HomePage = () => {
+    const BACK_END_URL = "http://localhost:5000/api/habit/getcurrentdate"
     // State to track the currently active habit tab for the logging form
     const [activeTab, setActiveTab] = useState(1);
     // Get the active habit object
@@ -14,6 +16,23 @@ const HomePage = () => {
     const filteredHabits = habitsForHomePage.filter((habit) => {
         return selectedHabitIds.includes(habit.id)
     })
+
+    const [onGoingDate, setOnGoingDate] = useState("")
+
+    useEffect(() => {
+        try {
+            const accessToken = localStorage.getItem("accessToken")
+            const getOnGoingDate = async () => {
+                const res = await axios.get(BACK_END_URL, {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                })
+                setOnGoingDate(res.data.data)
+            }
+            getOnGoingDate()
+        } catch (err) {
+            console.log(err);
+        }
+    }, [])
 
 
     return (
@@ -66,7 +85,11 @@ const HomePage = () => {
                                 </div>
                                 <div className="px-4 py-2 rounded-xl bg-slate-950 border border-white/10 flex items-center gap-2">
                                     <Flame className="w-5 h-5 text-orange-500" />
-                                    <span className="text-sm font-bold text-white">12 Day Streak</span>
+                                    <span className="text-sm font-bold text-white">{
+                                        onGoingDate == "0"
+                                            ? `Good Luck on 1st Day`
+                                            : `${onGoingDate} Days Completed`}
+                                    </span>
                                 </div>
                             </div>
 

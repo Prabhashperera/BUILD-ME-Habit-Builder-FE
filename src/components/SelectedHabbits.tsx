@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronRight, Star } from 'lucide-react';
 // Make sure this path points to the file you just shared
 import habits from '../data/habitsList';
