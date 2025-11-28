@@ -9,6 +9,13 @@ const HomePage = () => {
     // Get the active habit object
     const currentHabit = habitsForHomePage.find(h => h.id === activeTab) || habitsForHomePage[0];
 
+    // FIlter the selected Habits from localsotrage and filter it from habit list
+    const selectedHabitIds = JSON.parse(localStorage.getItem("habitsList") || "[]")
+    const filteredHabits = habitsForHomePage.filter((habit) => {
+        return selectedHabitIds.includes(habit.id)
+    })
+
+
     return (
         <div>
             <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-8 space-y-10">
@@ -19,7 +26,7 @@ const HomePage = () => {
                 {/* --- Dynamic Habit Switcher (Mini Navbar) --- */}
                 <section className="sticky top-20 z-40 bg-slate-950/80 backdrop-blur-xl border-y border-white/5 py-2 -mx-4 md:-mx-6 px-4 md:px-6">
                     <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-1">
-                        {habitsForHomePage.map((habit) => {
+                        {filteredHabits.map((habit) => {
                             const isActive = activeTab === habit.id;
                             return (
                                 <button
