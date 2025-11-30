@@ -3,9 +3,10 @@ import { Flame, Clock, Book, Salad } from 'lucide-react';
 import SelectedHabbits from '../components/SelectedHabbits';
 import habitsForHomePage from '../data/HabitsListForHomePage';
 import axios from 'axios';
+import BACK_END_URL from '../assets/Links';
 
 const HomePage = () => {
-    const BACK_END_URL = "http://localhost:5000/api/habit/getcurrentdate"
+    const GETDATEROUTE = "/getcurrentdate"
     // State to track the currently active habit tab for the logging form
     const [activeTab, setActiveTab] = useState(1);
     // Get the active habit object
@@ -23,7 +24,7 @@ const HomePage = () => {
         try {
             const accessToken = localStorage.getItem("accessToken")
             const getOnGoingDate = async () => {
-                const res = await axios.get(BACK_END_URL, {
+                const res = await axios.get(`${BACK_END_URL + GETDATEROUTE}`, {
                     headers: { Authorization: `Bearer ${accessToken}` }
                 })
                 setOnGoingDate(res.data.data)
