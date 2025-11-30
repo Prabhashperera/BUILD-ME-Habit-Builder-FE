@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { toast } from "react-toastify";
 import api from "../../api/axiosConfig";
 
 
@@ -12,7 +13,9 @@ export const sleepLogSave = async (logData: any) => {
             }
         })
         return response.data
-    } catch (err) {
-        console.log(err);
+    } catch (err: any) {
+        const message = err.response?.data?.message || err.message || "Unknown Error";
+        toast.error(`Failed to save sleep log: ${message}`);
+        throw new Error(message);
     }
 }
