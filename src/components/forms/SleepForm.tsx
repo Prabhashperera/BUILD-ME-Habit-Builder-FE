@@ -1,6 +1,36 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Clock } from "lucide-react"
+import { useDispatch, useSelector } from "react-redux"
+import { saveSleepLog } from "../../store/slices/sleepLogSlice"
+import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 
 function SleepForm() {
+    const dispatch = useDispatch<any>()
+    const [isLoading, data, error] = useSelector((state: any) => state.sleepHabit)
+    const [sleptAt, setSleptAt] = useState("")
+    const [wokeAt, setWokeAt] = useState("")
+
+    const handleLogClick = (e: any) => {
+        e.preventDefault()
+        try {
+            if (wokeAt && sleptAt == "") { return toast.error("Fileds Cannot Be Empty!!") }
+            dispatch(
+                saveSleepLog({ wokeAt, sleptAt })
+            )
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        try {
+            console.log(data, error)
+        } catch (err) {
+            console.log(err);
+        }
+    }, [data, error])
+
     return (
         <>
             <div className="space-y-6">
@@ -10,7 +40,10 @@ function SleepForm() {
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Slept Time</label>
                         <div className="flex items-center gap-2">
                             <Clock className="w-5 h-5 text-violet-400" />
-                            <input type="time" defaultValue="21:00" className="bg-transparent text-lg font-bold text-white outline-none w-full" />
+                            <input type="time" defaultValue="21:00" className="bg-transparent text-lg font-bold text-white outline-none w-full"
+                                value={sleptAt}
+                                onChange={(e) => setSleptAt(e.target.value)}
+                            />
                         </div>
                     </div>
                     {/* Wake up Time */}
@@ -18,7 +51,10 @@ function SleepForm() {
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Wake Up Time</label>
                         <div className="flex items-center gap-2">
                             <Clock className="w-5 h-5 text-violet-400" />
-                            <input type="time" defaultValue="07:00" className="bg-transparent text-lg font-bold text-white outline-none w-full" />
+                            <input type="time" defaultValue="07:00" className="bg-transparent text-lg font-bold text-white outline-none w-full"
+                                value={wokeAt}
+                                onChange={(e) => setWokeAt(e.target.value)}
+                            />
                         </div>
                     </div>
                 </div>
@@ -36,6 +72,15 @@ function SleepForm() {
                     </div>
                 </div>
             </div>
+
+            {/* Submit Button */}
+            <button disabled={isLoading} className="w-full mt-8 py-4 rounded-xl font-bold text-lg text-slate-950 shadow-lg 
+                            bg-linear-to-r hover:scale-[1.02] active:scale-[0.98] transition-all duration-300
+                            from-violet-400 to-indigo-400 shadow-violet-500/20"
+                onClick={handleLogClick}
+            >
+                Log Activity
+            </button >
         </>
     )
 }
