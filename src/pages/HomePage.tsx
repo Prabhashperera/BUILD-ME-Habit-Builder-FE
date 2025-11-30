@@ -26,6 +26,7 @@ const HomePage = () => {
 
     // Take Current Ongoing Date from Backend
     useEffect(() => {
+        let isMounted = true
         try {
             const accessToken = localStorage.getItem("accessToken")
             const getOnGoingDate = async () => {
@@ -35,9 +36,11 @@ const HomePage = () => {
                 setOnGoingDate(res.data.data)
             }
             getOnGoingDate()
+            if (isMounted) { isMounted = false } // Unmount the component
         } catch (err) {
             console.log(err);
         }
+
     }, [])
 
 
