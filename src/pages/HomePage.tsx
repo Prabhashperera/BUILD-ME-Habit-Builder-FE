@@ -121,7 +121,7 @@ const HomePage = () => {
                                 )}
                             </div>
 
-                            {/* Submit Button */}
+                            {/* Submit Button
                             <button className={`
                                 w-full mt-8 py-4 rounded-xl font-bold text-lg text-slate-950 shadow-lg 
                                 bg-linear-to-r hover:scale-[1.02] active:scale-[0.98] transition-all duration-300
@@ -131,7 +131,7 @@ const HomePage = () => {
                                 ${currentHabit.type === 'eating' ? 'from-orange-400 to-amber-400 shadow-orange-500/20' : ''}
                             `}>
                                 Log Activity
-                            </button>
+                            </button> */}
 
                         </div>
                     </div>

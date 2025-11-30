@@ -7,15 +7,16 @@ import { toast } from "react-toastify"
 
 function SleepForm() {
     const dispatch = useDispatch<any>()
-    const [isLoading, data, error] = useSelector((state: any) => state.sleepHabit)
-    const [sleptAt, setSleptAt] = useState("")
-    const [wokeAt, setWokeAt] = useState("")
+    const { isLoading, data, error } = useSelector((state: any) => state.sleepHabit)
+    const [sleptAt, setSleptAt] = useState("21:00")
+    const [wokeAt, setWokeAt] = useState("07:00")
 
     const handleLogClick = (e: any) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
-            if (wokeAt && sleptAt == "") { return toast.error("Fileds Cannot Be Empty!!") }
-            dispatch(
+            if (!sleptAt || !wokeAt) {
+                return toast.error("Fields cannot be empty!");
+            } dispatch(
                 saveSleepLog({ wokeAt, sleptAt })
             )
         } catch (err) {
@@ -40,7 +41,7 @@ function SleepForm() {
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Slept Time</label>
                         <div className="flex items-center gap-2">
                             <Clock className="w-5 h-5 text-violet-400" />
-                            <input type="time" defaultValue="21:00" className="bg-transparent text-lg font-bold text-white outline-none w-full"
+                            <input type="time" className="bg-transparent text-lg font-bold text-white outline-none w-full"
                                 value={sleptAt}
                                 onChange={(e) => setSleptAt(e.target.value)}
                             />
@@ -51,7 +52,7 @@ function SleepForm() {
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Wake Up Time</label>
                         <div className="flex items-center gap-2">
                             <Clock className="w-5 h-5 text-violet-400" />
-                            <input type="time" defaultValue="07:00" className="bg-transparent text-lg font-bold text-white outline-none w-full"
+                            <input type="time" className="bg-transparent text-lg font-bold text-white outline-none w-full"
                                 value={wokeAt}
                                 onChange={(e) => setWokeAt(e.target.value)}
                             />
