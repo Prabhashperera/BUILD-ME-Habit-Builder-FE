@@ -4,15 +4,12 @@ import { useDispatch, useSelector } from "react-redux"
 import { saveSleepLog } from "../../store/slices/sleepLogSlice"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import SleepHistoryCard from "../SleepHistoryCard"
 
 function SleepForm() {
     const dispatch = useDispatch<any>()
     const { isLoading, data, error } = useSelector((state: any) => state.sleepHabit)
     const [sleptAt, setSleptAt] = useState("21:00")
     const [wokeAt, setWokeAt] = useState("07:00")
-    const [isOpen, setIsOpen] = useState(false)
-
 
     const handleLogClick = (e: any) => {
         e.preventDefault();
@@ -35,27 +32,8 @@ function SleepForm() {
         }
     }, [data, error])
 
-    useEffect(() => {
-        try {
-            if (data) {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setIsOpen(true)
-            }
-        } catch (err: any) {
-            console.log(err.massege);
-        }
-    }, [data])
-
     return (
         <>
-            {/* Modal Showing UI */}
-            {/* <AdviceModal
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
-                advice={JSON.stringify(data?.data?.todayLog?.aiAdvice)}
-                points={JSON.stringify(data?.data?.todayLog?.pointsAwarded)}
-            /> */}
-
             {/* Content */}
             <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -105,19 +83,6 @@ function SleepForm() {
             >
                 Log Activity
             </button >
-            {/* Cards */}
-            <div className="w-full space-y-4">
-                <h2 className="text-xl font-bold text-white mb-6">Recent Activity</h2>
-                {/* THE GRID LAYOUT:
-                - grid-cols-1 : 1 card per row on mobile/tablet
-                - lg:grid-cols-2 : 2 cards per row on laptop/desktop
-                */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {historyLogs.map((log) => (
-                        <SleepHistoryCard key={log.id} log={log} />
-                    ))}
-                </div>
-            </div>
         </>
     )
 }

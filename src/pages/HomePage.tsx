@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { Flame } from 'lucide-react';
 import SelectedHabbits from '../components/SelectedHabbits';
@@ -8,6 +9,7 @@ import SleepForm from '../components/forms/SleepForm';
 import ReadForm from '../components/forms/ReadForm';
 import EatForm from '../components/forms/EatForm';
 import ExcerciseForm from '../components/forms/ExcerciseForm';
+import SleepHistoryCard from '../components/SleepHistoryCard';
 
 const HomePage = () => {
     const GETDATEROUTE = "/getcurrentdate"
@@ -41,6 +43,21 @@ const HomePage = () => {
             console.log(err);
         }
 
+    }, [])
+
+    const [logsData, setLogsData] = useState<any[]>([])
+
+    // Get Logs Data
+    useEffect(() => {
+        const accessToken = localStorage.getItem("accessToken")
+        const getAllLogs = async () => {
+            const res = await axios.get(BACK_END_URL + "/getuserAllLogs", {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            })
+            console.log(res.data.data.userLogs);
+            setLogsData(res.data.data.userLogs)
+        }
+        getAllLogs()
     }, [])
 
 
@@ -105,7 +122,9 @@ const HomePage = () => {
                             {/* Form Content Switcher */}
                             <div className="animate-fadeIn">
                                 {currentHabit.type === 'sleep' && (
-                                    <SleepForm />
+                                    <>
+                                        <SleepForm />
+                                    </>
                                 )}
 
                                 {currentHabit.type === 'reading' && (
@@ -136,6 +155,14 @@ const HomePage = () => {
                         </div>
                     </div>
                 </section>
+                <div className="w-full space-y-4">
+                    <h2 className="text-xl font-bold text-white mb-6">Recent Activities</h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {logsData?.map((log: any) => (
+                            <SleepHistoryCard key={log.id} log={log} />
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <style>{`

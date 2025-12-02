@@ -6,7 +6,7 @@ interface LogEntry {
     date: string;
     sleptAt: string;
     wokeAt: string;
-    quality: number; // e.g., 85
+    // quality: number
     points: number;
     advice: string;
 }
@@ -51,7 +51,7 @@ const SleepHistoryCard = ({ log }: { log: LogEntry }) => {
 
                     {/* Optional: Quality Indicator */}
                     <div className="ml-auto text-xs font-bold text-slate-500 uppercase">
-                        Quality: <span className="text-white">{log.quality}%</span>
+                        Quality: <span className="text-white">{80}%</span>
                     </div>
                 </div>
 
