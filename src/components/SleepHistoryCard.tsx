@@ -7,8 +7,8 @@ interface LogEntry {
     sleptAt: string;
     wokeAt: string;
     // quality: number
-    points: number;
-    advice: string;
+    pointsAwarded: number;
+    aiAdvice: string;
 }
 
 // --- 1. Single Card Component ---
@@ -29,7 +29,7 @@ const SleepHistoryCard = ({ log }: { log: LogEntry }) => {
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950 border border-violet-500/20 shadow-inner group-hover:border-violet-500/50 transition-colors">
                     <Zap className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                     <span className="text-base font-black text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-yellow-500">
-                        +{log.points} XP
+                        +{log.pointsAwarded} XP
                     </span>
                 </div>
             </div>
@@ -63,7 +63,7 @@ const SleepHistoryCard = ({ log }: { log: LogEntry }) => {
                     </div>
 
                     <p className="text-slate-300 text-sm leading-relaxed">
-                        {log.advice}
+                        {log.aiAdvice}
                     </p>
                 </div>
             </div>
