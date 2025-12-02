@@ -22,7 +22,7 @@ const SleepHistoryCard = ({ log }: { log: LogEntry }) => {
                 {/* Date Badge */}
                 <div className="flex items-center gap-2 text-slate-400 bg-slate-950/50 px-3 py-1.5 rounded-lg border border-white/5">
                     <Calendar className="w-4 h-4" />
-                    <span className="text-sm font-semibold">{log.date}</span>
+                    <span className="text-sm font-semibold">{log.date.split("T")[0]}</span>
                 </div>
 
                 {/* Gamified Points Badge */}
