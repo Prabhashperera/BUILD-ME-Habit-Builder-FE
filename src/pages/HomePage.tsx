@@ -155,14 +155,17 @@ const HomePage = () => {
                         </div>
                     </div>
                 </section>
-                <div className="w-full space-y-4">
-                    <h2 className="text-xl font-bold text-white mb-6">Recent Activities</h2>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {[...logsData]?.reverse().map((log: any) => (
-                            <SleepHistoryCard key={log.id} log={log} />
-                        ))}
+                {/* Load HIstiry Data According to Habit Type */}
+                {
+                    currentHabit.type === 'sleep' && <div className="w-full space-y-4">
+                        <h2 className="text-xl font-bold text-white mb-6">Recent Sleep Activities</h2>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {[...logsData]?.reverse().map((log: any) => (
+                                <SleepHistoryCard key={log.id} log={log} />
+                            ))}
+                        </div>
                     </div>
-                </div>
+                }
             </div>
 
             <style>{`
