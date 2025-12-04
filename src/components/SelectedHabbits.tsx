@@ -37,11 +37,25 @@ function SelectedHabbits() {
                     headers: { Authorization: `Bearer ${accessToken}` }
                 })
                 setProgressData(data.data)
-                // console.log("API Data:", data.data); 
             } catch (err) { console.log(err); }
         }
         getProgressData()
     }, [])
+
+    // --- LOGIC TO STRETCH CARDS ---
+    // This function returns the correct grid class based on how many items exist
+    const getGridClassName = (count: number) => {
+        switch (count) {
+            case 1:
+                return "grid-cols-1"; // 1 item? Full width
+            case 2:
+                return "grid-cols-1 md:grid-cols-2"; // 2 items? Split in half
+            case 3:
+                return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"; // 3 items? Thirds
+            default:
+                return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"; // 4+ items? Quarters
+        }
+    }
 
     return (
         <div>
@@ -53,10 +67,11 @@ function SelectedHabbits() {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                {/* UPDATED: Dynamic Grid Class */}
+                <div className={`grid gap-5 ${getGridClassName(selectedHabits.length)}`}>
+
                     {selectedHabits.map((habit) => {
                         // 4. Safe Data Lookup
-                        // Handles case sensitivity (e.g., "Sleep" vs "sleep")
                         const data = progressData[habit.type] || progressData[habit.type.toLowerCase()];
 
                         // 5. Default values if data is missing
@@ -67,7 +82,7 @@ function SelectedHabbits() {
                             <div
                                 key={habit.id}
                                 className={`
-                                    group relative p-5 rounded-3xl border bg-slate-900/40 backdrop-blur-md transition-all duration-300
+                                    group relative p-6 rounded-3xl border bg-slate-900/40 backdrop-blur-md transition-all duration-300
                                     hover:-translate-y-1 hover:shadow-2xl 
                                     border-white/5 hover:border-white/20 overflow-hidden cursor-pointer
                                     ${habit.activeBorder} 
@@ -76,15 +91,15 @@ function SelectedHabbits() {
                                 {/* Gradient Background */}
                                 <div className={`absolute inset-0 bg-linear-to-br ${habit.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
-                                <div className="relative z-10 flex flex-col h-full justify-between gap-4">
+                                <div className="relative z-10 flex flex-col h-full justify-between gap-5">
                                     {/* Header */}
                                     <div className="flex justify-between items-start">
-                                        <div className={`p-3 rounded-2xl bg-slate-950/50 border border-white/10 ${habit.color}`}>
-                                            <habit.icon className="w-6 h-6" />
+                                        <div className={`p-3.5 rounded-2xl bg-slate-950/50 border border-white/10 ${habit.color}`}>
+                                            <habit.icon className="w-7 h-7" />
                                         </div>
-                                        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-white/5 border border-white/5 backdrop-blur-sm">
-                                            <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                                            <span className="text-xs font-bold text-white">
+                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm">
+                                            <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
+                                            <span className="text-sm font-bold text-white">
                                                 {data?.currentPoints ?? 0}
                                             </span>
                                         </div>
@@ -92,25 +107,24 @@ function SelectedHabbits() {
 
                                     {/* Info */}
                                     <div>
-                                        <h3 className="text-lg font-bold text-white mb-1 group-hover:text-emerald-50 transition-colors">
+                                        <h3 className="text-xl font-bold text-white mb-1.5 group-hover:text-emerald-50 transition-colors">
                                             {habit.title}
                                         </h3>
-                                        <p className="text-xs font-medium text-slate-400">
+                                        <p className="text-sm font-medium text-slate-400">
                                             {data?.currentDays ?? 0} / {habit.days} Days Completed
                                         </p>
                                     </div>
 
                                     {/* Progress Bar */}
-                                    <div className="space-y-2">
+                                    <div className="space-y-2.5">
                                         <div className="flex justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
                                             <span>Progress</span>
                                             <span className={habit.color}>{currentProgress}%</span>
                                         </div>
-                                        <div className="h-2 w-full bg-slate-950 rounded-full overflow-hidden border border-white/5">
+                                        <div className="h-2.5 w-full bg-slate-950 rounded-full overflow-hidden border border-white/5">
                                             <div
                                                 className={`h-full rounded-full ${habit.color.replace('text-', 'bg-')} transition-all duration-1000 ease-out`}
                                                 style={{
-                                                    // Shows 5% width as a placeholder if progress is 0, so the bar is visible
                                                     width: hasStarted ? `${currentProgress}%` : '5%'
                                                 }}
                                             />
