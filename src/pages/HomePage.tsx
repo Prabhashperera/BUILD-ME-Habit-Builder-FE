@@ -95,7 +95,7 @@ const HomePage = () => {
 
 
                 {/* --- 4. Dynamic Content Area (Daily Log Form) --- */}
-                <section className="max-w-3xl mx-auto">
+                <section className="max-w-[1800px] mx-auto">
                     <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-slate-900/40 backdrop-blur-2xl shadow-2xl">
 
                         {/* Dynamic Top Gradient based on active habit */}
