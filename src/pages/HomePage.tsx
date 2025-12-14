@@ -123,7 +123,7 @@ const HomePage = () => {
                             <div className="animate-fadeIn">
                                 {currentHabit.type === 'sleep' && (
                                     <>
-                                        <SleepForm />
+                                        <SleepForm currentDate={onGoingDate} />
                                     </>
                                 )}
 
