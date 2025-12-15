@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { saveSleepLog } from "../../store/slices/sleepLogSlice"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import axios from "axios"
+import BACK_END_URL from "../../assets/Links"
+import SleepAnalysis from "../SleepAnalysis"
 
 function SleepForm(props: any) {
     const dispatch = useDispatch<any>()
@@ -34,9 +37,40 @@ function SleepForm(props: any) {
         }
     }, [data, error])
 
+    const [aiAnalysis, setAiAnalysis] = useState<any>(null)
+    const [aiLoading, setAiLoading] = useState(false)
+
+    useEffect(() => {
+        if (props.currentDate < 20) return
+
+        const fetchAiAnalysis = async () => {
+            try {
+                setAiLoading(true)
+
+                const accessToken = localStorage.getItem("accessToken")
+                if (!accessToken) return
+
+                const response = await axios.get(
+                    BACK_END_URL + "/generatefinalanalysis",
+                    {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    }
+                )
+
+                setAiAnalysis(response.data.data)
+            } catch (err) {
+                console.error("AI analysis failed", err)
+            } finally {
+                setAiLoading(false)
+            }
+        }
+
+        fetchAiAnalysis()
+    }, [props.currentDate])
+
     return (
         <>
-            {props.currentDate < 30 ?
+            {props.currentDate < 20 ?
                 // REMOVED: min-h-[80vh] to reduce vertical height
                 <div className="w-full max-w-[1800px] mx-auto flex items-center justify-center">
 
@@ -197,7 +231,18 @@ function SleepForm(props: any) {
                         </div>
                     </div>
                 </div>
-                : "hello"}
+                : aiLoading ? (
+                    <div className="text-white text-center py-20">
+                        Generating your sleep analysis...
+                    </div>
+                ) : aiAnalysis ? (
+                    <SleepAnalysis analysis={aiAnalysis} />
+                ) : (
+                    <div className="text-slate-400 text-center py-20">
+                        No analysis available yet
+                    </div>
+                )
+            }
         </>
     )
 }
