@@ -43,10 +43,34 @@ function SleepForm(props: any) {
     useEffect(() => {
         if (props.currentDate < 20) return
 
-        const fetchAiAnalysis = async () => {
+        const getAiAnalysis = async () => {
             try {
                 setAiLoading(true)
 
+                const accessToken = localStorage.getItem("accessToken")
+                if (!accessToken) return
+
+                const response = await axios.get(
+                    BACK_END_URL + "/getFinalAiAnalysis",
+                    {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    }
+                )
+                if (response.data.data) {
+                    setAiAnalysis(response.data.data)
+                } else {
+                    await fetchAiAnalysis()
+                }
+            } catch (err) {
+                console.error("AI analysis failed", err)
+            } finally {
+                setAiLoading(false)
+            }
+        }
+
+        // sdsss
+        const fetchAiAnalysis = async () => {
+            try {
                 const accessToken = localStorage.getItem("accessToken")
                 if (!accessToken) return
 
@@ -56,8 +80,22 @@ function SleepForm(props: any) {
                         headers: { Authorization: `Bearer ${accessToken}` }
                     }
                 )
-
+                const isSaved = await axios.post(BACK_END_URL + "/saveFinalAiAnalysis",
+                    {
+                        aiAnalysis: response.data.data,   // body data here
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                )
                 setAiAnalysis(response.data.data)
+                if (isSaved.status == 200) {
+                    toast.info("Ai Analysis Saved!!")
+                } else {
+                    toast.error("Ai Analysis Not Saved!!")
+                }
             } catch (err) {
                 console.error("AI analysis failed", err)
             } finally {
@@ -65,7 +103,7 @@ function SleepForm(props: any) {
             }
         }
 
-        fetchAiAnalysis()
+        getAiAnalysis()
     }, [props.currentDate])
 
     return (
