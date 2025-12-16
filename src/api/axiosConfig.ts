@@ -76,7 +76,12 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch (err) {
                 processQueue(err, null);
-                // Optional: Logout user here if refresh fails
+                // Logout user here if refresh fails
+                // 2. Clear the invalid tokens from storage
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                // 3. Force redirect to the login page
+                window.location.href = "/login";
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;
