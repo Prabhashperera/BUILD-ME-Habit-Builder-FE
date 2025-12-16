@@ -7,6 +7,7 @@ import { toast } from "react-toastify"
 import axios from "axios"
 import BACK_END_URL from "../../assets/Links"
 import SleepAnalysis from "../SleepAnalysis"
+import api from "../../api/axiosConfig"
 
 function SleepForm(props: any) {
     const dispatch = useDispatch<any>()
@@ -41,7 +42,7 @@ function SleepForm(props: any) {
     const [aiLoading, setAiLoading] = useState(false)
 
     useEffect(() => {
-        if (props.currentDate < 20) return
+        if (props.currentDate < 30) return
 
         const getAiAnalysis = async () => {
             try {
@@ -50,8 +51,8 @@ function SleepForm(props: any) {
                 const accessToken = localStorage.getItem("accessToken")
                 if (!accessToken) return
 
-                const response = await axios.get(
-                    BACK_END_URL + "/getFinalAiAnalysis",
+                const response = await api.get(
+                    "habit/getFinalAiAnalysis",
                     {
                         headers: { Authorization: `Bearer ${accessToken}` }
                     }
@@ -74,8 +75,8 @@ function SleepForm(props: any) {
                 const accessToken = localStorage.getItem("accessToken")
                 if (!accessToken) return
 
-                const response = await axios.get(
-                    BACK_END_URL + "/generatefinalanalysis",
+                const response = await api.get(
+                    "habit/generatefinalanalysis",
                     {
                         headers: { Authorization: `Bearer ${accessToken}` }
                     }
@@ -108,7 +109,7 @@ function SleepForm(props: any) {
 
     return (
         <>
-            {props.currentDate < 20 ?
+            {props.currentDate < 30 ?
                 // REMOVED: min-h-[80vh] to reduce vertical height
                 <div className="w-full max-w-[1800px] mx-auto flex items-center justify-center">
 
