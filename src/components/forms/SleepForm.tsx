@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { saveSleepLog } from "../../store/slices/sleepLogSlice"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import axios from "axios"
-import BACK_END_URL from "../../assets/Links"
 import SleepAnalysis from "../SleepAnalysis"
 import api from "../../api/axiosConfig"
 
@@ -81,7 +79,7 @@ function SleepForm(props: any) {
                         headers: { Authorization: `Bearer ${accessToken}` }
                     }
                 )
-                const isSaved = await axios.post(BACK_END_URL + "/saveFinalAiAnalysis",
+                const isSaved = await api.post("habit/saveFinalAiAnalysis",
                     {
                         aiAnalysis: response.data.data,   // body data here
                     },

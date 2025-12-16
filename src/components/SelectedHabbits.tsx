@@ -2,7 +2,7 @@ import { ChevronRight, Star } from 'lucide-react';
 // Make sure this path points to the file you just shared
 import habits from '../data/habitsList';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api/axiosConfig';
 
 // 1. Interface for the API Response Data
 interface IHabitProgress {
@@ -18,8 +18,6 @@ interface IResponse {
 }
 
 function SelectedHabbits() {
-    const BACKEND_URL = "http://localhost:5000/api/habit/sleepprogress"
-
     // 2. Filter Selected Habits based on LocalStorage
     const selectedHabitIds = JSON.parse(localStorage.getItem("habitsList") || "[]")
     const selectedHabits = habits.filter((habit) => {
@@ -33,7 +31,7 @@ function SelectedHabbits() {
         const getProgressData = async () => {
             try {
                 const accessToken = localStorage.getItem("accessToken")
-                const { data } = await axios.get<IResponse>(BACKEND_URL, {
+                const { data } = await api.get<IResponse>("/habit/sleepprogress", {
                     headers: { Authorization: `Bearer ${accessToken}` }
                 })
                 setProgressData(data.data)

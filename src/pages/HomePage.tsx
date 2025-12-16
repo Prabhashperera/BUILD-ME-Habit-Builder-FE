@@ -3,16 +3,14 @@ import { useEffect, useState } from 'react';
 import { Flame } from 'lucide-react';
 import SelectedHabbits from '../components/SelectedHabbits';
 import habitsForHomePage from '../data/HabitsListForHomePage';
-import axios from 'axios';
-import BACK_END_URL from '../assets/Links';
 import SleepForm from '../components/forms/SleepForm';
 import ReadForm from '../components/forms/ReadForm';
 import EatForm from '../components/forms/EatForm';
 import ExcerciseForm from '../components/forms/ExcerciseForm';
 import SleepHistoryCard from '../components/SleepHistoryCard';
+import api from '../api/axiosConfig';
 
 const HomePage = () => {
-    const GETDATEROUTE = "/getcurrentdate"
     // State to track the currently active habit tab for the logging form
     const [activeTab, setActiveTab] = useState(1);
     // Get the active habit object
@@ -32,7 +30,7 @@ const HomePage = () => {
         try {
             const accessToken = localStorage.getItem("accessToken")
             const getOnGoingDate = async () => {
-                const res = await axios.get(`${BACK_END_URL + GETDATEROUTE}`, {
+                const res = await api.get("/habit/getcurrentdate", {
                     headers: { Authorization: `Bearer ${accessToken}` }
                 })
                 setOnGoingDate(res.data.data)
@@ -51,7 +49,7 @@ const HomePage = () => {
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken")
         const getAllLogs = async () => {
-            const res = await axios.get(BACK_END_URL + "/getuserAllLogs", {
+            const res = await api.get("/habit/getuserAllLogs", {
                 headers: { Authorization: `Bearer ${accessToken}` }
             })
             console.log(res.data.data.userLogs);

@@ -29,7 +29,9 @@ const LoginPage = () => {
     useEffect(() => {
         if (data) {
             toast.success("Login Success")
-            localStorage.setItem("accessToken", data.data.token)
+            console.log(data.data);
+            localStorage.setItem("accessToken", data.data.accessToken)
+            localStorage.setItem("refreshToken", data.data.refreshToken)
             localStorage.setItem("email", data.data.email)
             navigate("/habits")
         }
