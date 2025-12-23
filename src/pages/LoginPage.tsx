@@ -27,9 +27,11 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (data) {
+        // We check if data exists AND if it contains an accessToken.
+        // This prevents the 'Signup Success' data (which has no token)
+        // from triggering this login redirect.
+        if (data && data?.data?.accessToken) {
             toast.success("Login Success")
-            console.log(data.data);
             localStorage.setItem("accessToken", data.data.accessToken)
             localStorage.setItem("refreshToken", data.data.refreshToken)
             localStorage.setItem("email", data.data.email)
@@ -37,6 +39,7 @@ const LoginPage = () => {
         }
 
     }, [data, navigate])
+    // -------------------
 
     useEffect(() => {
         if (error) {
@@ -48,8 +51,7 @@ const LoginPage = () => {
     return (
         <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden font-sans">
 
-            {/* --- Growth Theme Background Glows (Green/Teal) --- */}
-            {/* Top Left Glow - Emerald */}
+            {/* Top Left Glow - Emerald*/}
             <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl -translate-x-1/4 -translate-y-1/4 mix-blend-screen animate-pulse-slow" />
             {/* Bottom Right Glow - Lime/Teal */}
             <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-3xl translate-x-1/4 translate-y-1/4 mix-blend-screen" />
