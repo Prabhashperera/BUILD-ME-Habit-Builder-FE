@@ -8,9 +8,7 @@ const api = axios.create({
     },
 });
 
-// Flag to track if a refresh is running
 let isRefreshing = false;
-// Queue to hold requests while refreshing
 let failedQueue: any[] = [];
 
 const processQueue = (error: any, token: string | null = null) => {
@@ -35,10 +33,17 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // --- FIX IS HERE ---
+        // Check if the request is NOT for login or register before trying to refresh.
+        // If the error comes from /login, we want to let the LoginPage handle it (show "Wrong Password")
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry &&
+            !originalRequest.url?.includes("/login") &&
+            !originalRequest.url?.includes("/signup")
+        ) {
 
             if (isRefreshing) {
-                // If refreshing, return a promise that waits for the new token
                 return new Promise((resolve, reject) => {
                     failedQueue.push({
                         resolve: (token: string) => {
@@ -68,20 +73,21 @@ api.interceptors.response.use(
                 localStorage.setItem("accessToken", accessToken);
                 api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-                // Process the queue with the new token
                 processQueue(null, accessToken);
 
-                // Return the original request
                 originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                 return api(originalRequest);
             } catch (err) {
                 processQueue(err, null);
-                // Logout user here if refresh fails
-                // 2. Clear the invalid tokens from storage
+
+                // Only redirect if we are NOT already on the login page to avoid loops
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
-                // 3. Force redirect to the login page
-                window.location.href = "/login";
+
+                if (window.location.pathname !== "/login") {
+                    window.location.href = "/login";
+                }
+
                 return Promise.reject(err);
             } finally {
                 isRefreshing = false;
