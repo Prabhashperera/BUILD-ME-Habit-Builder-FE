@@ -13,6 +13,8 @@ function SleepForm(props: any) {
     const [sleptAt, setSleptAt] = useState("21:00")
     const [wokeAt, setWokeAt] = useState("07:00")
     const [quality, setQuality] = useState(85)
+    // state to track if the user clicked the button
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const handleLogClick = (e: any) => {
         e.preventDefault();
@@ -23,10 +25,35 @@ function SleepForm(props: any) {
             dispatch(
                 saveSleepLog({ wokeAt, sleptAt })
             )
+            setIsSubmitting(true)
+        } catch (err) {
+            toast.error("Erro : " + err);
+            setIsSubmitting(false)
+        }
+    }
+
+    useEffect(() => {
+        try {
+            // Only run if we are currently submitting and loading has finished
+            if (!isLoading && isSubmitting) {
+                if (error) {
+                    console.error(error);
+                    toast.error("Failed to save sleep log.");
+                } else {
+                    // If there is no error, we assume success
+                    console.log(data)
+                    toast.success("Sleep log saved successfully!");
+                }
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2500);
+                // Reset the submitting flag so it doesn't fire again automatically
+                setIsSubmitting(false);
+            }
         } catch (err) {
             console.log(err);
         }
-    }
+    }, [isLoading, isSubmitting, data, error])
 
     useEffect(() => {
         try {
@@ -104,6 +131,7 @@ function SleepForm(props: any) {
 
         getAiAnalysis()
     }, [props.currentDate])
+
 
     return (
         <>
