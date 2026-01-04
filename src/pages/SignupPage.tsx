@@ -1,209 +1,244 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Mail, Lock, User, Rocket, ArrowRight, Github, Star, Crown } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { signupUser } from '../store/slices/authSlice';
-import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-
-
+import {
+  Mail,
+  Lock,
+  User,
+  ArrowRight,
+  Github,
+  Rocket,
+  CheckCircle,
+  Trophy,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signupUser, reset } from "../store/slices/authSlice";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { GoogleLogin } from "@react-oauth/google";
+import api from "../api/axiosConfig";
 
 const SignupPage = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch<any>();
+  const { isLoading, data, error } = useSelector((state: any) => state.auth);
+  
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const dispatch = useDispatch<any>()
-    const { isLoading, data, error } = useSelector((state: any) => state.auth)
-    const [userName, setUserName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  // Reset state on mount
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
 
-    const handleSignUp = () => {
-        dispatch(
-            signupUser({
-                userName,
-                email,
-                password
-            })
-        )
-    }
-
-    // After Successfull Signup redirect to login page
-    useEffect(() => {
-        if (data) {
-            toast.success("Account created successfully!");
-            navigate("/login")
-        }
-        if (error) {
-            toast.error(error);
-        }
-    }, [data, error, navigate])
-
-
-
-    // -------------------------------------
-    return (
-        <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4 relative overflow-hidden font-sans">
-
-
-            {/* --- Cosmic Theme Background Glows (Violet/Pink) --- */}
-            {/* Top Right Glow - Violet */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/20 rounded-full blur-3xl translate-x-1/3 -translate-y-1/4 mix-blend-screen animate-pulse-slow" />
-            {/* Bottom Left Glow - Fuchsia */}
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-fuchsia-600/10 rounded-full blur-3xl -translate-x-1/4 translate-y-1/4 mix-blend-screen" />
-
-            {/* Main Card Container */}
-            <div className="relative w-full max-w-4xl bg-[#111827]/80 backdrop-blur-xl border border-violet-500/20 rounded-3xl shadow-[0_0_40px_-10px_rgba(139,92,246,0.3)] overflow-hidden grid lg:grid-cols-5">
-
-                {/* --- Left Side Visuals (Mastery Context) --- */}
-                <div className="hidden lg:flex lg:col-span-2 flex-col justify-center items-center p-12 bg-linear-to-br from-violet-900/40 via-[#0F172A]/90 to-fuchsia-900/40 relative overflow-hidden">
-                    {/* Pattern Overlay - Stars/Dots */}
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
-
-                    <div className="relative z-10 text-center space-y-6">
-                        {/* Icon - Rocket for Launch */}
-                        <div className="inline-flex p-4 bg-violet-950/50 rounded-2xl border border-violet-500/30 backdrop-blur-md shadow-[0_0_20px_rgba(139,92,246,0.4)] mb-4">
-                            <Rocket className="w-16 h-16 text-violet-300" />
-                        </div>
-
-                        <h2 className="text-3xl font-extrabold text-white tracking-tight">
-                            Build Me<br /> <span className="text-transparent bg-clip-text bg-linear-to-r from-violet-400 to-fuchsia-400">Make Habits</span>
-                        </h2>
-
-                        <p className="text-violet-200/60 text-sm max-w-xs mx-auto leading-relaxed">
-                            Join the elite circle of achievers. Master your routine and reach legendary status.
-                        </p>
-
-                        {/* Gamified "Rank" Decoration Card */}
-                        <div className="mt-10 p-4 bg-[#0B0F19]/80 rounded-xl border border-fuchsia-500/20 w-full max-w-[220px] shadow-xl transform hover:scale-105 transition-transform cursor-default text-left">
-                            <div className="flex justify-between items-center mb-3">
-                                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Current Rank</span>
-                                <Crown className="w-4 h-4 text-amber-400" />
-                            </div>
-                            <div className="flex items-center gap-3 mb-3">
-                                <div className="w-10 h-10 rounded-full bg-linear-to-tr from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                                    1
-                                </div>
-                                <div>
-                                    <div className="text-sm font-bold text-white">Habits</div>
-                                    <div className="text-[10px] text-fuchsia-400">0 / 500 XP</div>
-                                </div>
-                            </div>
-                            {/* Fake XP Bar */}
-                            <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                                <div className="bg-linear-to-r from-violet-500 to-fuchsia-400 h-1.5 w-[15%] shadow-[0_0_10px_rgba(232,121,249,0.5)]"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* --- Right Side Form --- */}
-                <div className="p-8 md:p-12 lg:col-span-3 flex flex-col justify-center relative">
-
-                    <div className="mb-8">
-                        <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                            <Star className="w-6 h-6 text-fuchsia-500 fill-fuchsia-500" />
-                            New Player
-                        </h3>
-                        <p className="text-slate-400 text-sm">Design your avatar's future today.</p>
-                    </div>
-
-                    {/* The Form */}
-                    <form className="space-y-4">
-
-                        {/* Username Input */}
-                        <div className="group">
-                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 group-focus-within:text-fuchsia-400 transition-colors">
-                                Username
-                            </label>
-                            <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-fuchsia-400 transition-colors" />
-                                <input
-                                    type="text"
-                                    placeholder="MasterMind"
-                                    className="w-full bg-[#0B0F19]/50 border border-slate-700 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all placeholder-slate-600"
-                                    autoComplete="off"
-                                    value={userName}
-                                    onChange={(e) => setUserName(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Email Input */}
-                        <div className="group">
-                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 group-focus-within:text-fuchsia-400 transition-colors">
-                                Email Address
-                            </label>
-                            <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-fuchsia-400 transition-colors" />
-                                <input
-                                    type="email"
-                                    placeholder="you@example.com"
-                                    className="w-full bg-[#0B0F19]/50 border border-slate-700 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all placeholder-slate-600"
-                                    autoComplete="off"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Password Input */}
-                        <div className="group">
-                            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 group-focus-within:text-fuchsia-400 transition-colors">
-                                Password
-                            </label>
-                            <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-fuchsia-400 transition-colors" />
-                                <input
-                                    type="password"
-                                    placeholder="Create a strong password"
-                                    className="w-full bg-[#0B0F19]/50 border border-slate-700 text-white rounded-lg py-3 pl-12 pr-4 focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-all placeholder-slate-600"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Action Button - Violet to Pink Gradient */}
-                        {/* <Link to={"/login"}> */}
-                        <button onClick={handleSignUp} disabled={isLoading} type="button" className="w-full bg-linear-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-bold py-4 rounded-lg shadow-[0_0_20px_-5px_rgba(192,38,211,0.4)] transform transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group uppercase tracking-wider text-sm mt-7 cursor-pointer">
-                            <span>Initialize Account</span>
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
-                        {/* </Link> */}
-                    </form>
-
-                    {/* Divider */}
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-slate-800"></div>
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase tracking-wider">
-                            <span className="px-4 bg-[#111827] text-slate-500">Or connect with</span>
-                        </div>
-                    </div>
-
-                    {/* Social Login */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <button className="flex items-center justify-center gap-2 p-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-300 transition-all group cursor-pointer">
-                            <Github className="w-5 h-5 group-hover:text-white transition-colors" />
-                            <span className="text-sm font-semibold">Github</span>
-                        </button>
-                        <button className="flex items-center justify-center gap-2 p-3 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-300 transition-all group cursor-pointer">
-                            <Mail className="w-5 h-5 text-sky-500/70 group-hover:text-sky-400 transition-colors" />
-                            <span className="text-sm font-semibold">Google</span>
-                        </button>
-                    </div>
-
-                    {/* Footer Link */}
-                    <Link to={'/login'} >
-                        <p className="mt-6 text-center text-slate-500 text-sm">
-                            Already initialized? <span className="text-fuchsia-400 hover:text-fuchsia-300 font-bold hover:underline transition-colors">Login Account</span>
-                        </p>
-                    </Link>
-                </div>
-            </div>
-        </div>
+  const handleSignUp = async (e: any) => {
+    e.preventDefault(); // Prevent default form submission
+    dispatch(
+      signupUser({
+        userName,
+        email,
+        password,
+      })
     );
+  };
+
+  // Google Login Handler
+  const handleGoogleLogin = async (credentialResponse: any) => {
+    try {
+      const token = credentialResponse.credential;
+      const res = await api.post("/auth/google", { token });
+      
+      toast.success("Account created with Google!");
+      // Save tokens
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
+      localStorage.setItem("email", res.data.email);
+      
+      navigate("/habits");
+    } catch (err) {
+      console.error(err);
+      toast.error("Google signup failed");
+    }
+  };
+
+  // After Successful Signup redirect to login
+  useEffect(() => {
+    if (data) {
+      toast.success("Account created successfully! Please login.");
+      navigate("/login");
+      dispatch(reset()); // Clear the success state
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(reset()); // Clear error after showing
+    }
+  }, [data, error, navigate, dispatch]);
+
+  return (
+    <div className="min-h-screen w-full flex bg-slate-950 font-sans selection:bg-emerald-500/30">
+      
+      {/* LEFT SIDE: Visuals (Hidden on mobile) */}
+      <div className="hidden lg:flex w-1/2 relative bg-slate-900 items-center justify-center overflow-hidden">
+        {/* Abstract Background */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-emerald-900/20 via-slate-900 to-slate-950"></div>
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px]"></div>
+        
+        {/* Noise Overlay */}
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
+
+        {/* Content */}
+        <div className="relative z-10 p-12 max-w-lg">
+          <div className="mb-8 inline-flex items-center justify-center p-3 bg-slate-800/50 backdrop-blur-md rounded-2xl border border-slate-700/50 shadow-xl">
+             <Rocket className="w-8 h-8 text-emerald-400" />
+          </div>
+          
+          <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
+            Level up your <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
+              real life character.
+            </span>
+          </h1>
+          
+          <p className="text-slate-400 text-lg mb-12 leading-relaxed">
+            Stop dreaming about consistency. Start building it. Join the community of achievers today.
+          </p>
+
+          {/* Floating 'Achievement' Card */}
+          <div className="bg-slate-800/40 backdrop-blur-xl border border-emerald-500/20 p-5 rounded-2xl shadow-2xl flex items-center gap-5 transform rotate-[2deg] hover:rotate-0 transition-all duration-500">
+            <div className="bg-gradient-to-br from-yellow-400 to-amber-600 p-3 rounded-xl shadow-lg shadow-amber-500/20">
+              <Trophy className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <div className="flex justify-between items-center mb-1">
+                <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">New Achievement</p>
+                <span className="text-emerald-400 text-xs font-bold">+500 XP</span>
+              </div>
+              <div className="text-lg font-bold text-white">Early Adopter</div>
+            </div>
+            <div className="h-8 w-8 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-500/30">
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* RIGHT SIDE: Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative">
+        <div className="w-full max-w-md space-y-8">
+          
+          <div className="text-center lg:text-left">
+            <h2 className="text-3xl font-bold text-white tracking-tight">Create an account</h2>
+            <p className="mt-2 text-slate-400">Start your journey in seconds. No credit card required.</p>
+          </div>
+
+          <form onSubmit={handleSignUp} className="space-y-5">
+            
+            {/* Username */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+              </div>
+              <input
+                type="text"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="block w-full pl-11 pr-4 py-4 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+                placeholder="Username"
+                required
+              />
+            </div>
+
+            {/* Email */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+              </div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="block w-full pl-11 pr-4 py-4 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+                placeholder="Email address"
+                required
+              />
+            </div>
+
+            {/* Password */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Lock className="h-5 w-5 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
+              </div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="block w-full pl-11 pr-4 py-4 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
+                placeholder="Create password"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full flex items-center justify-center py-4 px-4 border border-transparent rounded-xl shadow-lg shadow-emerald-900/20 text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-emerald-500 transition-all transform hover:scale-[1.01]"
+            >
+              {isLoading ? (
+                "Creating Account..."
+              ) : (
+                <>
+                  Get Started <ArrowRight className="ml-2 h-5 w-5" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Social Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-800"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-slate-950 text-slate-500">Or join with</span>
+            </div>
+          </div>
+
+          {/* Social Buttons */}
+          <div className="grid grid-cols-2 gap-4">
+            <button className="flex items-center justify-center px-4 py-3 border border-slate-800 rounded-xl bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+              <Github className="h-5 w-5 mr-2" />
+              <span className="font-semibold text-sm">GitHub</span>
+            </button>
+            
+            <div className="flex items-center justify-center h-[50px] border border-slate-800 rounded-xl bg-slate-900 overflow-hidden hover:bg-slate-800 transition-all">
+              <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={() => toast.error("Signup Failed")}
+                theme="filled_black"
+                shape="rectangular"
+                text="signup_with"
+                size="medium"
+                logo_alignment="left"
+                width="200"
+              />
+            </div>
+          </div>
+
+          <p className="text-center text-sm text-slate-500">
+            Already have an account?{" "}
+            <Link to="/login" className="font-bold text-emerald-400 hover:text-emerald-300 transition-colors">
+              Log in
+            </Link>
+          </p>
+        </div>
+        
+        <div className="absolute bottom-6 left-0 right-0 text-center">
+             <p className="text-xs text-slate-700">© 2026 Build Me. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default SignupPage;
