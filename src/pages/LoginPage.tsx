@@ -5,7 +5,6 @@ import {
   Sprout,
   ArrowRight,
   Github,
-  CheckCircle2,
   Zap,
 } from "lucide-react";
 import { useEffect, useState } from "react";
