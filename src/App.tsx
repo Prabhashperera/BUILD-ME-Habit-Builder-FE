@@ -7,11 +7,13 @@ import { ToastContainer } from 'react-toastify';
 import HabitsPage from "./pages/HabitsPage";
 import HomePage from "./pages/HomePage";
 import HomeLayout from "./layouts/HomeLayout";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
 
   return (
-    <BrowserRouter>
+    <GoogleOAuthProvider clientId={"import.meta.env.VITE_GOOGLE_CLIENT_ID"}>
+      <BrowserRouter>
       <ToastContainer
         position="top-right"
         autoClose={3000}  // close automatically after 3s
@@ -37,6 +39,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </GoogleOAuthProvider>
   )
 }
 
