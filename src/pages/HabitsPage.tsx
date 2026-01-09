@@ -129,7 +129,7 @@ const HabitsPage = () => {
                                 </div>
                             </div>
                         </div>
-                        <Link to={"/home"}>
+                        <Link to={"/"}>
                             <button className="
                             relative overflow-hidden rounded-xl bg-linear-to-r from-emerald-500 to-cyan-600 
                             px-6 py-3 text-white font-bold text-sm shadow-lg shadow-emerald-500/20
