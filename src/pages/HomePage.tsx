@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { Flame, Activity, LayoutDashboard, Calendar } from 'lucide-react';
+import {Calendar } from 'lucide-react';
 import SelectedHabbits from '../components/SelectedHabbits';
 import habitsForHomePage from '../data/HabitsListForHomePage';
 import SleepForm from '../components/forms/SleepForm';
@@ -52,34 +52,6 @@ const HomePage = () => {
 
     return (
         <div className="min-h-screen bg-[#09090b] text-zinc-200 font-sans selection:bg-indigo-500/30 pb-20">
-            
-            {/* Top Navigation Bar */}
-            <nav className="border-b border-zinc-800 bg-[#09090b]/80 backdrop-blur-md sticky top-0 z-40">
-                <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-zinc-900 border border-zinc-700 rounded-lg flex items-center justify-center">
-                            <LayoutDashboard className="w-4 h-4 text-white" />
-                        </div>
-                        <span className="font-semibold text-white tracking-tight">HabitOS</span>
-                        <span className="text-zinc-600">/</span>
-                        <span className="text-zinc-400 font-medium">Dashboard</span>
-                    </div>
-
-                    {/* Minimal Stats */}
-                    <div className="flex items-center gap-6 text-sm">
-                        <div className="flex items-center gap-2">
-                            <Flame className="w-4 h-4 text-zinc-500" />
-                            <span className="text-zinc-400">Streak:</span>
-                            <span className="text-white font-mono font-medium">{onGoingDate}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Activity className="w-4 h-4 text-zinc-500" />
-                            <span className="text-zinc-400">Status:</span>
-                            <span className="text-emerald-500 font-medium">Active</span>
-                        </div>
-                    </div>
-                </div>
-            </nav>
 
             <div className="max-w-[1600px] mx-auto px-6 md:px-10 pt-8 space-y-8">
                 
