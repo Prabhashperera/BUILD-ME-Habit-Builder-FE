@@ -28,7 +28,7 @@ const HabitsPage = () => {
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
             </div>
 
-            <div className="relative z-10 w-full max-w-[1920px] mx-auto px-6 md:px-10 py-12 flex flex-col h-full flex-1">
+            <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 md:px-8 py-12 flex flex-col h-full flex-1">
                 
                 {/* --- 2. Header --- */}
                 <header className="mb-16 text-center space-y-6">
@@ -36,17 +36,18 @@ const HabitsPage = () => {
                         <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                         <span className="text-[10px] font-medium tracking-[0.2em] text-white/60 uppercase">System Config</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-medium tracking-tight text-white">
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-medium tracking-tight text-white max-w-4xl mx-auto leading-tight">
                         Design your <span className="text-transparent bg-clip-text bg-gradient-to-b from-indigo-300 to-white">protocol.</span>
                     </h1>
-                    <p className="text-white/40 max-w-lg mx-auto text-lg font-light">
+                    <p className="text-white/40 max-w-lg mx-auto text-base md:text-lg font-light leading-relaxed">
                         Select the modules you wish to track. Each habit adds a new dimension to your personal analytics.
                     </p>
                 </header>
 
-                {/* --- 3. Bento Grid (Full Width) --- */}
+                {/* --- 3. Bento Grid (Fixed Aspect Ratios) --- */}
                 <main className="flex-1 pb-40 w-full">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 w-full">
+                    {/* Changed grid breakpoints to keep cards wide */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full place-items-stretch">
                         {habitsList.map((habit) => {
                             const isSelected = selectedHabitsIds.includes(habit.id);
                             return (
@@ -54,20 +55,20 @@ const HabitsPage = () => {
                                     key={habit.id}
                                     onClick={() => toggleHabit(habit.id)}
                                     className={`
-                                        group relative h-[300px] cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
+                                        group relative w-full cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
                                         ${isSelected ? 'scale-[1.02]' : 'hover:scale-[1.01]'}
                                     `}
                                 >
-                                    {/* Glass Card Container */}
+                                    {/* Glass Card Container - HEIGHT REMOVED, Aspect Ratio Added */}
                                     <div className={`
-                                        absolute inset-0 rounded-[2rem] border backdrop-blur-2xl transition-all duration-500 overflow-hidden
+                                        relative w-full aspect-[4/5] md:aspect-[3/4] rounded-[2rem] border backdrop-blur-2xl transition-all duration-500 overflow-hidden flex flex-col
                                         ${isSelected 
                                             ? 'bg-[#0f0f0f]/80 border-white/20 shadow-[0_0_50px_-10px_rgba(255,255,255,0.1)]' 
                                             : 'bg-[#0f0f0f]/40 border-white/5 hover:bg-[#0f0f0f]/60 hover:border-white/10'
                                         }
                                     `}>
                                         
-                                        {/* Ambient Light Blob (Internal Glow) */}
+                                        {/* Ambient Light Blob */}
                                         <div className={`
                                             absolute -right-20 -top-20 w-60 h-60 bg-gradient-to-br ${habit.gradient} 
                                             opacity-0 group-hover:opacity-20 blur-[80px] transition-opacity duration-700 pointer-events-none
@@ -76,7 +77,7 @@ const HabitsPage = () => {
                                         {/* Card Content */}
                                         <div className="h-full p-8 flex flex-col justify-between relative z-10">
                                             
-                                            {/* Top Row: Icon & Checkbox */}
+                                            {/* Top Row */}
                                             <div className="flex justify-between items-start">
                                                 <div className={`
                                                     w-14 h-14 rounded-2xl flex items-center justify-center text-white transition-all duration-500
@@ -99,15 +100,15 @@ const HabitsPage = () => {
                                                 </div>
                                             </div>
 
-                                            {/* Bottom Row: Text Info */}
-                                            <div className="space-y-3">
-                                                <h3 className="text-2xl font-medium text-white tracking-tight">{habit.title}</h3>
-                                                <p className="text-white/40 text-sm leading-relaxed line-clamp-2 font-light">
+                                            {/* Bottom Row */}
+                                            <div className="space-y-3 mt-auto">
+                                                <h3 className="text-2xl font-medium text-white tracking-tight leading-none">{habit.title}</h3>
+                                                <p className="text-white/40 text-sm leading-relaxed font-light">
                                                     {habit.description}
                                                 </p>
                                                 
-                                                {/* Meta Tag (Optional) */}
-                                                <div className="pt-4 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                                                {/* Meta Tag */}
+                                                <div className={`pt-2 flex items-center gap-3 transition-opacity duration-500 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
                                                     <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest border border-white/10 px-2 py-1 rounded-md">
                                                         +{habit.points} XP
                                                     </span>
