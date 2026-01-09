@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Check, Zap, Sword, ArrowRight, Sparkles } from 'lucide-react';
+import { Check, Zap, Map, Crown, ArrowRight, Sparkles } from 'lucide-react';
 import habitsList from '../data/habitsList';
 import { Link } from 'react-router-dom';
 
@@ -19,29 +19,33 @@ const HabitsPage = () => {
     }
 
     return (
-        // BACKGROUND: Deep Indigo/Blue Gradient - Not Pitch Black
-        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900 via-slate-900 to-black font-sans relative overflow-x-hidden flex flex-col text-white">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-emerald-50 font-sans selection:bg-indigo-200 text-slate-800 relative overflow-x-hidden flex flex-col">
             
-            {/* Ambient Noise/Texture */}
-            <div className="fixed inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none mix-blend-overlay"></div>
+            {/* Background Decorations */}
+            <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+                <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-200/40 rounded-full blur-[100px]" />
+                <div className="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-emerald-200/40 rounded-full blur-[100px]" />
+            </div>
 
-            {/* FULL WIDTH CONTAINER */}
-            <div className="relative z-10 w-full px-4 md:px-8 py-8 flex flex-col h-full flex-1">
+            <div className="relative z-10 w-full px-4 md:px-8 py-8 flex flex-col h-full flex-1 max-w-[1920px] mx-auto">
                 
-                {/* Header - Game Title Style */}
-                <header className="py-8 text-center space-y-3">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-                        <Sparkles className="w-4 h-4 text-yellow-300" />
-                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-white">New Game Plus</span>
+                {/* Header */}
+                <header className="py-12 text-center space-y-4">
+                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white shadow-lg shadow-indigo-100 border border-indigo-50 animate-bounce-slow">
+                        <Map className="w-5 h-5 text-indigo-500" />
+                        <span className="text-sm font-bold uppercase tracking-wider text-indigo-900">Adventure Awaits</span>
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight uppercase drop-shadow-[0_0_25px_rgba(99,102,241,0.5)]">
-                        Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500">Skills</span>
+                    <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight">
+                        Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-500">Quests</span>
                     </h1>
+                    <p className="text-slate-500 font-medium text-lg max-w-lg mx-auto">
+                        Every habit is a skill tree waiting to be unlocked.
+                    </p>
                 </header>
 
-                {/* Cards Grid - FULL WIDTH - 4 Columns on Laptop/Desktop */}
-                <main className="flex-1 pb-32 w-full">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full">
+                {/* Quest Grid */}
+                <main className="flex-1 pb-40 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full">
                         {habitsList.map((habit) => {
                             const isSelected = selectedHabitsIds.includes(habit.id);
                             return (
@@ -49,53 +53,63 @@ const HabitsPage = () => {
                                     key={habit.id}
                                     onClick={() => toggleHabit(habit.id)}
                                     className={`
-                                        group relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-200
-                                        ${isSelected ? 'ring-2 ring-cyan-400 bg-cyan-900/30' : 'hover:bg-white/5 bg-white/5'}
-                                        border border-white/10 hover:border-white/30
+                                        group relative cursor-pointer transition-all duration-500 ease-out
+                                        hover:-translate-y-2 hover:rotate-1
                                     `}
                                 >
-                                    {/* Content Wrapper - Compact Height */}
-                                    <div className="p-5 flex flex-col h-full relative z-10">
+                                    {/* Card Container */}
+                                    <div className={`
+                                        relative h-full rounded-[2.5rem] p-8 border-2 transition-all duration-300 overflow-hidden
+                                        ${isSelected 
+                                            ? 'bg-white border-indigo-500 shadow-2xl shadow-indigo-200 scale-[1.02]' 
+                                            : 'bg-white/60 backdrop-blur-xl border-white hover:border-indigo-200 shadow-xl hover:shadow-2xl shadow-slate-200/50'
+                                        }
+                                    `}>
                                         
-                                        <div className="flex justify-between items-start mb-3">
-                                            {/* Icon - Glowing */}
+                                        {/* Header */}
+                                        <div className="flex justify-between items-start mb-6">
                                             <div className={`
-                                                w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg
+                                                w-16 h-16 rounded-3xl flex items-center justify-center text-white shadow-lg transform transition-transform group-hover:scale-110 group-hover:rotate-3
                                                 bg-gradient-to-br ${habit.gradient}
                                             `}>
-                                                <habit.icon className="w-6 h-6" />
+                                                <habit.icon className="w-8 h-8" />
                                             </div>
 
-                                            {/* Checkbox */}
                                             <div className={`
-                                                w-6 h-6 rounded border-2 flex items-center justify-center transition-all duration-200
+                                                w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm
                                                 ${isSelected 
-                                                    ? 'border-cyan-400 bg-cyan-400 text-black' 
-                                                    : 'border-white/30 bg-black/20'
+                                                    ? 'bg-indigo-500 text-white scale-110 rotate-12' 
+                                                    : 'bg-slate-100 text-slate-300 group-hover:bg-indigo-50'
                                                 }
                                             `}>
-                                                <Check className={`w-4 h-4 font-bold transition-all ${isSelected ? 'scale-100' : 'scale-0'}`} />
+                                                <Check className="w-6 h-6 stroke-[3px]" />
                                             </div>
                                         </div>
 
-                                        <div className="mb-4">
-                                            <h3 className="text-xl font-bold text-white leading-tight mb-1 group-hover:text-cyan-300 transition-colors">
+                                        {/* Content */}
+                                        <div className="space-y-3 mb-8">
+                                            <h3 className={`text-2xl font-black ${isSelected ? 'text-indigo-900' : 'text-slate-800'}`}>
                                                 {habit.title}
                                             </h3>
-                                            <p className="text-indigo-200/70 text-xs font-medium line-clamp-2">
+                                            <p className="text-slate-500 font-medium leading-relaxed">
                                                 {habit.description}
                                             </p>
                                         </div>
 
-                                        {/* Footer Stats - Compact */}
-                                        <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-3">
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1">
-                                                <Sword className="w-3 h-3" /> {habit.days} Days
+                                        {/* Game Stats Badge */}
+                                        <div className="flex items-center gap-3">
+                                            <span className="px-4 py-2 rounded-xl bg-amber-50 text-amber-600 text-xs font-bold uppercase tracking-wider border border-amber-100 flex items-center gap-2">
+                                                <Crown className="w-4 h-4 fill-amber-500" /> {habit.points} XP
                                             </span>
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-300 flex items-center gap-1">
-                                                <Zap className="w-3 h-3" /> {habit.points} XP
+                                            <span className="px-4 py-2 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold uppercase tracking-wider border border-slate-100 flex items-center gap-2">
+                                                Easy
                                             </span>
                                         </div>
+
+                                        {/* Selection Ring Animation */}
+                                        {isSelected && (
+                                            <div className="absolute inset-0 border-4 border-indigo-500 rounded-[2.5rem] opacity-20 animate-ping pointer-events-none" />
+                                        )}
                                     </div>
                                 </div>
                             );
@@ -104,18 +118,29 @@ const HabitsPage = () => {
                 </main>
             </div>
 
-            {/* Bottom Bar - Glassmorphism */}
-            <div className={`fixed bottom-0 left-0 right-0 p-4 z-50 transition-transform duration-300 ${selectedHabitsIds.length > 0 ? 'translate-y-0' : 'translate-y-full'}`}>
-                <div className="w-full bg-slate-900/80 backdrop-blur-xl border-t border-white/20 p-4 shadow-2xl flex items-center justify-between">
-                    <div className="flex items-center gap-4 px-4">
-                        <span className="text-2xl font-black text-white">{selectedHabitsIds.length}</span>
-                        <div className="h-8 w-[1px] bg-white/20"></div>
-                        <p className="text-white font-bold text-sm uppercase tracking-widest">Skills Equipped</p>
+            {/* Floating Action Bar - Game Style */}
+            <div className={`
+                fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1)
+                ${selectedHabitsIds.length > 0 ? 'translate-y-0 opacity-100' : 'translate-y-[200%] opacity-0'}
+            `}>
+                <div className="bg-slate-900/90 backdrop-blur-2xl text-white p-3 pr-4 rounded-full shadow-2xl shadow-indigo-500/30 flex items-center gap-6 border border-white/10 scale-110">
+                    <div className="flex items-center gap-4 pl-4">
+                        <div className="flex -space-x-2">
+                            {/* Decorative avatars representing selected habits could go here */}
+                            <div className="w-8 h-8 rounded-full bg-indigo-500 border-2 border-slate-900 flex items-center justify-center text-xs font-bold">
+                                {selectedHabitsIds.length}
+                            </div>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Ready to play?</span>
+                            <span className="text-sm font-bold text-white">Quests Active</span>
+                        </div>
                     </div>
                     
                     <Link to="/" onClick={handleClickStart}>
-                        <button className="bg-cyan-500 hover:bg-cyan-400 text-black font-black uppercase tracking-wider px-8 py-3 rounded-lg flex items-center gap-2 shadow-[0_0_20px_rgba(6,182,212,0.6)] transition-all transform active:scale-95">
-                            Start Mission <ArrowRight className="w-5 h-5" />
+                        <button className="bg-white text-indigo-900 px-8 py-3 rounded-full font-black text-sm uppercase tracking-wide hover:scale-105 active:scale-95 transition-transform shadow-lg flex items-center gap-2 group">
+                            <Sparkles className="w-4 h-4 text-amber-500 group-hover:rotate-12 transition-transform" />
+                            Start Journey
                         </button>
                     </Link>
                 </div>
