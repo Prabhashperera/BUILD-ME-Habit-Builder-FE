@@ -19,17 +19,16 @@ const HabitsPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#09090b] font-sans selection:bg-cyan-500/30 relative overflow-hidden flex flex-col">
+        <div className="min-h-screen bg-[#09090b] font-sans selection:bg-cyan-500/30 relative overflow-x-hidden flex flex-col">
             
             {/* --- Game Background Grid --- */}
-            <div className="fixed inset-0 z-0">
+            <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
                 <div className="absolute top-0 left-0 right-0 h-[500px] bg-purple-900/20 blur-[120px]" />
-                <div className="absolute bottom-0 left-0 right-0 h-[300px] bg-blue-900/10 blur-[100px]" />
             </div>
 
-            {/* --- WIDE CONTAINER --- */}
-            <div className="relative z-10 w-full max-w-[1800px] mx-auto px-4 md:px-8 flex flex-col h-full flex-1">
+            {/* --- FULL WIDTH CONTAINER --- */}
+            <div className="relative z-10 w-full px-6 md:px-10 py-8 flex flex-col h-full flex-1">
                 
                 {/* Header */}
                 <header className="py-10 text-center space-y-4">
@@ -40,14 +39,11 @@ const HabitsPage = () => {
                     <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase drop-shadow-2xl">
                         Select Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">Loadout</span>
                     </h1>
-                    <p className="text-slate-400 font-medium max-w-lg mx-auto">
-                        Equip habits to boost your real-life stats.
-                    </p>
                 </header>
 
-                {/* Cards Grid - Adjusted to fill width (3 cols on XL screens) */}
+                {/* Cards Grid - SCALES TO 5 COLUMNS ON WIDE SCREENS */}
                 <main className="flex-1 pb-32">
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 w-full">
                         {habitsList.map((habit) => {
                             const isSelected = selectedHabitsIds.includes(habit.id);
                             return (
@@ -63,31 +59,25 @@ const HabitsPage = () => {
                                     <div className={`absolute inset-0 bg-gradient-to-r ${isSelected ? 'from-cyan-500 via-blue-500 to-purple-600 animate-spin-slow' : 'from-slate-800 to-slate-900'} opacity-100 transition-all duration-500`} />
                                     
                                     {/* Inner Card Content */}
-                                    <div className="relative h-full bg-slate-950/90 backdrop-blur-xl rounded-[22px] p-6 lg:p-8 flex flex-col justify-between border border-white/5 group-hover:bg-slate-900/90 transition-colors">
+                                    <div className="relative h-full bg-slate-950/90 backdrop-blur-xl rounded-[22px] p-6 flex flex-col justify-between border border-white/5 group-hover:bg-slate-900/90 transition-colors">
                                         
                                         <div className="flex justify-between items-start mb-6">
-                                            {/* Icon Box */}
-                                            <div className={`
-                                                w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-2xl
-                                                bg-gradient-to-br ${habit.gradient}
-                                            `}>
-                                                <habit.icon className="w-8 h-8" />
+                                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-2xl bg-gradient-to-br ${habit.gradient}`}>
+                                                <habit.icon className="w-7 h-7" />
                                             </div>
 
-                                            {/* Checkbox UI */}
-                                            <div className={`
-                                                w-10 h-10 rounded-xl border-2 flex items-center justify-center transition-all duration-300
+                                            <div className={`w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all duration-300
                                                 ${isSelected 
                                                     ? 'border-cyan-500 bg-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.5)]' 
                                                     : 'border-slate-700 bg-slate-800/50'
                                                 }
                                             `}>
-                                                <Check className={`w-6 h-6 font-bold transition-all ${isSelected ? 'scale-100' : 'scale-0'}`} />
+                                                <Check className={`w-5 h-5 font-bold transition-all ${isSelected ? 'scale-100' : 'scale-0'}`} />
                                             </div>
                                         </div>
 
-                                        <div className="space-y-3 mb-6">
-                                            <h3 className="text-2xl font-black text-white uppercase tracking-wide group-hover:text-cyan-200 transition-colors">
+                                        <div className="space-y-2 mb-6">
+                                            <h3 className="text-xl font-black text-white uppercase tracking-wide group-hover:text-cyan-200 transition-colors">
                                                 {habit.title}
                                             </h3>
                                             <p className="text-slate-400 text-sm font-medium leading-relaxed">
@@ -95,7 +85,6 @@ const HabitsPage = () => {
                                             </p>
                                         </div>
 
-                                        {/* Stats Footer */}
                                         <div className="mt-auto pt-4 border-t border-white/5 flex items-center gap-3">
                                             <div className="flex items-center gap-2 text-xs font-bold text-slate-300 bg-slate-800/50 px-3 py-2 rounded-lg border border-white/5 w-full justify-center">
                                                 <Sword className="w-3.5 h-3.5 text-purple-400" />
@@ -116,7 +105,7 @@ const HabitsPage = () => {
 
             {/* Floating Action Bar */}
             <div className={`fixed bottom-0 left-0 right-0 p-6 z-50 bg-gradient-to-t from-black via-black/95 to-transparent transition-transform duration-500 ${selectedHabitsIds.length > 0 ? 'translate-y-0' : 'translate-y-full'}`}>
-                <div className="max-w-4xl mx-auto bg-[#18181b] border border-slate-700/50 rounded-2xl p-4 shadow-2xl flex items-center justify-between ring-1 ring-white/10">
+                <div className="w-full max-w-4xl mx-auto bg-[#18181b] border border-slate-700/50 rounded-2xl p-4 shadow-2xl flex items-center justify-between ring-1 ring-white/10">
                     <div className="flex items-center gap-4 px-2">
                         <div className="h-12 w-12 rounded-full bg-cyan-500 flex items-center justify-center font-black text-black text-lg">
                             {selectedHabitsIds.length}
