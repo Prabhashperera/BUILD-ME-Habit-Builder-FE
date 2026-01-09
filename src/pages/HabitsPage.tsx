@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Check, Zap, Map, Crown, ArrowRight, Sparkles } from 'lucide-react';
+import { Check, Map, Crown, Sparkles } from 'lucide-react';
 import habitsList from '../data/habitsList';
 import { Link } from 'react-router-dom';
 
