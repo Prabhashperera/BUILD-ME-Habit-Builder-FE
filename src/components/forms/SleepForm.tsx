@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Clock, Moon, Info, Activity, BedSingle, Sun } from "lucide-react"
+import { Clock, Moon, Info, Activity, BedSingle, Sun, Save, Loader2, BarChart3 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { saveSleepLog } from "../../store/slices/sleepLogSlice"
 import { useEffect, useState } from "react"
@@ -136,112 +136,106 @@ function SleepForm(props: any) {
     return (
         <>
             {props.currentDate < 30 ?
-                // REMOVED: min-h-[80vh] to reduce vertical height
-                <div className="w-full max-w-[1800px] mx-auto flex items-center justify-center">
+                <div className="w-full flex items-center justify-center">
 
-                    {/* REMOVED: min-h-[700px] -> Let content define height */}
-                    <div className="w-full grid grid-cols-1 lg:grid-cols-12 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+                    {/* MAIN CONTAINER: Changed from violet/blur to Zinc/Border */}
+                    <div className="w-full grid grid-cols-1 lg:grid-cols-12 bg-[#09090b] border border-zinc-800 rounded-2xl overflow-hidden">
 
                         {/* LEFT SIDE: Educational Content 
-                    REDUCED: Padding (p-16 -> p-10)
-                */}
-                        <div className="lg:col-span-5 relative p-8 lg:p-10 bg-linear-to-br from-indigo-600/20 via-slate-900/50 to-violet-900/20 border-b lg:border-b-0 lg:border-r border-white/5 flex flex-col justify-between">
-                            {/* Decorative Blobs */}
-                            <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-40">
-                                <div className="absolute top-[-10%] left-[-10%] w-64 h-64 bg-violet-600/30 rounded-full blur-[100px]"></div>
-                                <div className="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-blue-600/20 rounded-full blur-[100px]"></div>
-                            </div>
+                            STYLE: Changed from Gradient to Solid Dark Zinc
+                        */}
+                        <div className="lg:col-span-5 relative p-8 border-b lg:border-b-0 lg:border-r border-zinc-800 flex flex-col justify-between bg-zinc-900/50">
+                            
+                            {/* Decorative Grid instead of Blobs */}
+                            <div className="absolute inset-0 bg-[linear-gradient(to_right,#27272a_1px,transparent_1px),linear-gradient(to_bottom,#27272a_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-20 pointer-events-none" />
 
-                            <div className="space-y-6">
+                            <div className="space-y-8 relative z-10">
                                 <div>
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-xs font-bold uppercase tracking-wider mb-4">
                                         <Activity className="w-3 h-3" /> Challenge Rules
                                     </div>
-                                    {/* REDUCED: Text size */}
-                                    <h2 className="text-3xl lg:text-4xl font-bold text-white mb-3 leading-tight">
-                                        Introduction to the <br />
-                                        <span className="text-transparent bg-clip-text bg-linear-to-r from-violet-400 to-indigo-400">
-                                            Sleep Habit Challenge
-                                        </span>
+                                    
+                                    <h2 className="text-2xl lg:text-3xl font-bold text-white mb-3 leading-tight">
+                                        Sleep Habit <br />
+                                        <span className="text-zinc-400">Protocol</span>
                                     </h2>
-                                    <p className="text-slate-400 text-sm lg:text-base leading-relaxed max-w-md">
-                                        According the World Health Organization (WHO) and global sleep research guidelines.
+                                    <p className="text-zinc-500 text-sm leading-relaxed max-w-md">
+                                        Follow the global sleep research guidelines to maximize your recovery score.
                                     </p>
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-4">
-                                    <div className="flex gap-4 items-center">
-                                        <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center shrink-0 border border-violet-500/10">
-                                            <BedSingle className="w-5 h-5 text-violet-400" />
+                                    <div className="flex gap-4 items-center p-3 rounded-lg border border-zinc-800/50 hover:border-zinc-700 transition-colors bg-zinc-950/30">
+                                        <div className="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center shrink-0 border border-zinc-800">
+                                            <BedSingle className="w-5 h-5 text-indigo-400" />
                                         </div>
                                         <div>
-                                            <h4 className="text-white text-base font-semibold">Sleep Time</h4>
-                                            <p className="text-xs text-slate-500">Time: 10:00 PM – 11:00 PM - 1 Point </p>
+                                            <h4 className="text-zinc-200 text-sm font-bold">Sleep Time</h4>
+                                            <p className="text-xs text-zinc-500">10:00 PM – 11:00 PM • 1 Point </p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-4 items-center">
-                                        <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0 border border-indigo-500/10">
-                                            <Sun className="w-5 h-5 text-indigo-400" />
+                                    <div className="flex gap-4 items-center p-3 rounded-lg border border-zinc-800/50 hover:border-zinc-700 transition-colors bg-zinc-950/30">
+                                        <div className="w-10 h-10 rounded-lg bg-zinc-900 flex items-center justify-center shrink-0 border border-zinc-800">
+                                            <Sun className="w-5 h-5 text-amber-400" />
                                         </div>
                                         <div>
-                                            <h4 className="text-white text-base font-semibold">Wakeup Time</h4>
-                                            <p className="text-xs text-slate-500">5:30 AM – 6:30 AM - 1 Point</p>
+                                            <h4 className="text-zinc-200 text-sm font-bold">Wakeup Time</h4>
+                                            <p className="text-xs text-zinc-500">5:30 AM – 6:30 AM • 1 Point</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mt-8 pt-6 border-t border-white/5">
+                            <div className="mt-8 pt-6 border-t border-zinc-800 relative z-10">
                                 <div className="flex items-center gap-3">
-                                    <Info className="w-4 h-4 text-slate-500" />
-                                    <p className="text-xs text-slate-500">
+                                    <Info className="w-4 h-4 text-zinc-600" />
+                                    <p className="text-xs text-zinc-600">
+                                        Consistent timing regulates circadian rhythm.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
                         {/* RIGHT SIDE: The Form 
-                    REDUCED: Padding (p-20 -> p-10/12)
-                */}
-                        <div className="lg:col-span-7 p-6 lg:p-12 bg-slate-950/40 flex flex-col justify-center items-center">
+                            STYLE: Clean Input fields, Technical Look
+                        */}
+                        <div className="lg:col-span-7 p-6 lg:p-10 bg-[#09090b] flex flex-col justify-center">
 
-                            <div className="w-full max-w-2xl space-y-6">
+                            <div className="w-full space-y-8">
 
                                 <div className="flex items-center justify-between mb-2">
                                     <div>
-                                        <h3 className="text-2xl font-bold text-white">Log Session</h3>
-                                        <p className="text-slate-400 text-xs mt-1">Record your sleep data accurately.</p>
+                                        <h3 className="text-xl font-bold text-white">Log Session</h3>
+                                        <p className="text-zinc-500 text-xs mt-1">Record your sleep data accurately.</p>
                                     </div>
                                 </div>
 
                                 {/* Times Grid */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {/* Slept Time 
-                                REDUCED: Padding (p-6 -> p-4) and Font Size (text-2xl -> text-xl)
-                            */}
-                                    <div className="p-4 rounded-2xl bg-slate-900 border border-white/5 hover:border-violet-500/30 transition-all duration-300 group shadow-lg shadow-black/20">
-                                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-2 group-hover:text-violet-400 transition-colors">Bedtime</label>
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-2 rounded-lg bg-violet-500/10 group-hover:bg-violet-500/20 transition-colors">
-                                                <Moon className="w-5 h-5 text-violet-400" />
-                                            </div>
-                                            <input type="time" className="bg-transparent text-xl font-bold text-white outline-none w-full scheme-dark cursor-pointer"
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Slept Time */}
+                                    <div className="space-y-2 group">
+                                        <label className="flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wide group-focus-within:text-indigo-400 transition-colors">
+                                            <Moon className="w-3 h-3" /> Bedtime
+                                        </label>
+                                        <div className="relative">
+                                            <input 
+                                                type="time" 
+                                                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white font-mono text-sm focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-all cursor-pointer"
                                                 value={sleptAt}
                                                 onChange={(e) => setSleptAt(e.target.value)}
                                             />
                                         </div>
                                     </div>
 
-                                    {/* Wake up Time 
-                                REDUCED: Padding (p-6 -> p-4) and Font Size (text-2xl -> text-xl)
-                            */}
-                                    <div className="p-4 rounded-2xl bg-slate-900 border border-white/5 hover:border-indigo-500/30 transition-all duration-300 group shadow-lg shadow-black/20">
-                                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-2 group-hover:text-indigo-400 transition-colors">Wake Up</label>
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-2 rounded-lg bg-indigo-500/10 group-hover:bg-indigo-500/20 transition-colors">
-                                                <Clock className="w-5 h-5 text-indigo-400" />
-                                            </div>
-                                            <input type="time" className="bg-transparent text-xl font-bold text-white outline-none w-full scheme-dark cursor-pointer"
+                                    {/* Wake up Time */}
+                                    <div className="space-y-2 group">
+                                        <label className="flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wide group-focus-within:text-amber-400 transition-colors">
+                                            <Clock className="w-3 h-3" /> Wake Up
+                                        </label>
+                                        <div className="relative">
+                                            <input 
+                                                type="time" 
+                                                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white font-mono text-sm focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-all cursor-pointer"
                                                 value={wokeAt}
                                                 onChange={(e) => setWokeAt(e.target.value)}
                                             />
@@ -249,16 +243,18 @@ function SleepForm(props: any) {
                                     </div>
                                 </div>
 
+                                <div className="h-px bg-zinc-800/50 w-full" />
+
                                 {/* Quality Slider */}
-                                <div className="p-6 rounded-2xl bg-slate-900 border border-white/5 shadow-lg shadow-black/20">
-                                    <div className="flex justify-between items-end mb-4">
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-end">
                                         <div>
-                                            <label className="text-base font-bold text-white block mb-0.5">Sleep Quality</label>
-                                            <span className="text-xs text-slate-500">How refreshed do you feel?</span>
+                                            <label className="text-sm font-bold text-white block mb-0.5">Recovery Quality</label>
+                                            <span className="text-xs text-zinc-500">Subjective analysis score</span>
                                         </div>
-                                        <div className={`flex items-baseline gap-1 ${quality > 80 ? 'text-emerald-400' : quality > 50 ? 'text-yellow-400' : 'text-rose-400'}`}>
-                                            <span className="text-3xl font-black">{quality}</span>
-                                            <span className="text-sm font-bold">%</span>
+                                        <div className={`flex items-baseline gap-1 font-mono ${quality > 80 ? 'text-emerald-400' : quality > 50 ? 'text-yellow-400' : 'text-rose-400'}`}>
+                                            <span className="text-2xl font-bold">{quality}</span>
+                                            <span className="text-xs font-bold text-zinc-600">%</span>
                                         </div>
                                     </div>
 
@@ -267,29 +263,31 @@ function SleepForm(props: any) {
                                         min="0" max="100"
                                         value={quality}
                                         onChange={(e) => setQuality(parseInt(e.target.value))}
-                                        className="w-full h-2 bg-slate-800 rounded-full appearance-none cursor-pointer accent-violet-500 hover:accent-violet-400 transition-all mb-3"
+                                        className="w-full h-1.5 bg-zinc-900 rounded-full appearance-none cursor-pointer accent-white hover:accent-zinc-200 transition-all mb-2"
                                     />
 
-                                    <div className="flex justify-between text-[10px] uppercase tracking-widest text-slate-600 font-bold px-1">
-                                        <span>Tired</span>
-                                        <span>Okay</span>
-                                        <span>Great</span>
+                                    <div className="flex justify-between text-[10px] uppercase tracking-widest text-zinc-600 font-bold px-1">
+                                        <span>Lethargic</span>
+                                        <span>Optimal</span>
                                     </div>
                                 </div>
 
                                 {/* Submit Button */}
-                                <button disabled={isLoading} className="w-full py-4 rounded-xl font-bold text-lg text-white shadow-xl 
-                            bg-linear-to-r from-violet-600 to-indigo-600 
-                            hover:from-violet-500 hover:to-indigo-500
-                            hover:scale-[1.01] active:scale-[0.99] 
-                            shadow-violet-900/20
-                            transition-all duration-300 flex items-center justify-center gap-2 mt-2"
+                                <button 
+                                    disabled={isLoading} 
+                                    className="w-full py-3.5 rounded-lg font-bold text-sm text-black bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-white/5 transition-all flex items-center justify-center gap-2"
                                     onClick={handleLogClick}
                                 >
                                     {isLoading ? (
-                                        <span className="flex items-center gap-2">Saving...</span>
+                                        <div className="flex items-center gap-2">
+                                            <Loader2 className="w-4 h-4 animate-spin" /> 
+                                            <span>Processing...</span>
+                                        </div>
                                     ) : (
-                                        <>Log Sleep Activity <Activity className="w-5 h-5" /></>
+                                        <>
+                                            <Save className="w-4 h-4" />
+                                            <span>Commit Entry</span>
+                                        </>
                                     )}
                                 </button >
                             </div>
@@ -297,14 +295,22 @@ function SleepForm(props: any) {
                     </div>
                 </div>
                 : aiLoading ? (
-                    <div className="text-white text-center py-20">
-                        Generating your sleep analysis...
+                    <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                        <div className="w-10 h-10 border-2 border-zinc-800 border-t-white rounded-full animate-spin" />
+                        <div className="text-zinc-500 text-sm font-mono">Generating analysis protocol...</div>
                     </div>
                 ) : aiAnalysis ? (
-                    <SleepAnalysis analysis={aiAnalysis} />
+                    <div className="w-full border border-zinc-800 rounded-2xl overflow-hidden">
+                        <div className="bg-zinc-900/50 p-4 border-b border-zinc-800 flex items-center gap-2 text-indigo-400">
+                             <BarChart3 className="w-5 h-5" />
+                             <span className="text-xs font-bold uppercase tracking-wider">Analysis Report</span>
+                        </div>
+                        <SleepAnalysis analysis={aiAnalysis} />
+                    </div>
                 ) : (
-                    <div className="text-slate-400 text-center py-20">
-                        No analysis available yet
+                    <div className="text-zinc-500 text-center py-20 border border-dashed border-zinc-800 rounded-2xl bg-zinc-900/20">
+                        <Info className="w-8 h-8 mx-auto mb-3 text-zinc-700" />
+                        <p className="text-sm">No analysis data available</p>
                     </div>
                 )
             }
@@ -312,4 +318,4 @@ function SleepForm(props: any) {
     )
 }
 
-export default SleepForm
+export default SleepForm;
