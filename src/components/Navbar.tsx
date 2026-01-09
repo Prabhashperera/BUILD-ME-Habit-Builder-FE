@@ -10,7 +10,7 @@ function Navbar() {
                             <Activity className="w-6 h-6 text-emerald-400" />
                         </div>
                     </div>
-                    <span className="text-xl font-bold tracking-tight">Habit<span className="text-emerald-400">Forge</span></span>
+                    <span className="text-xl font-bold tracking-tight">Build<span className="text-emerald-400">Me</span></span>
                 </div>
 
                 <div className="flex items-center gap-4">
