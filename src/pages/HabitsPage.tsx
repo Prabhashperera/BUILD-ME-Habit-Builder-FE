@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Check, Calendar, Sparkles, ArrowRight, Zap } from 'lucide-react';
-import habitsList from '../data/habitsList'; //Habits List
+import { Check, Zap, Shield, Sword, ArrowRight } from 'lucide-react';
+import habitsList from '../data/habitsList';
 import { Link } from 'react-router-dom';
 
 const HabitsPage = () => {
     const [selectedHabitsIds, setSelectedIds] = useState<number[]>([]);
 
-    // Selected Habits id Stores in a state
     const toggleHabit = (id: number) => {
         setSelectedIds((prev) => prev.includes(id)
             ? prev.filter(item => item !== id)
@@ -19,33 +19,34 @@ const HabitsPage = () => {
     }
 
     return (
-        <div className="h-screen w-screen bg-slate-950 font-sans selection:bg-emerald-500/30 flex flex-col relative overflow-hidden">
-
-            {/* --- Background --- */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-indigo-900/10 rounded-full blur-[100px] mix-blend-screen animate-pulse-slow" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-emerald-900/10 rounded-full blur-[100px] mix-blend-screen" />
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03]"></div>
+        <div className="min-h-screen bg-[#09090b] font-sans selection:bg-cyan-500/30 relative overflow-hidden flex flex-col">
+            
+            {/* --- Game Background Grid --- */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+                <div className="absolute top-0 left-0 right-0 h-[500px] bg-purple-900/20 blur-[120px]" />
+                <div className="absolute bottom-0 left-0 right-0 h-[300px] bg-blue-900/10 blur-[100px]" />
             </div>
 
-            {/* --- Main Layout Wrapper (Flex Column) --- */}
-            <div className="flex flex-col h-full w-full max-w-7xl mx-auto px-4 md:px-6 relative z-10">
-
-                {/* 1. Compact Header (Flex None) */}
-                <header className="flex-none py-6 flex flex-col items-center justify-center space-y-3">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/80 border border-slate-700/50 backdrop-blur-xl shadow-lg">
-                        <Sparkles className="w-3 h-3 text-emerald-400" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">Level Up</span>
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6 flex flex-col h-full flex-1">
+                
+                {/* Header */}
+                <header className="py-8 text-center space-y-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/50 border border-slate-700 backdrop-blur-md shadow-lg shadow-cyan-500/10">
+                        <Shield className="w-4 h-4 text-cyan-400" />
+                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-100">Prepare for Battle</span>
                     </div>
-                    <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-none text-center">
-                        CHOOSE YOUR <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 via-cyan-400 to-violet-400">BATTLES</span>
+                    <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase drop-shadow-2xl">
+                        Select Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">Quests</span>
                     </h1>
+                    <p className="text-slate-400 font-medium max-w-lg mx-auto">
+                        Choose the skills you want to master. Each habit grants XP and boosts your real-life stats.
+                    </p>
                 </header>
 
-                {/* 2. Scrollable Grid Area (Flex 1) - Fits perfectly in remaining space */}
-                {/* We use min-h-0 to allow the flex item to shrink and overflow-y-auto only if absolutely necessary on tiny screens */}
-                <main className="flex-1 min-h-0 w-full flex flex-col justify-center pb-24">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full max-h-[600px] w-full mx-auto">
+                {/* Cards Grid */}
+                <main className="flex-1 pb-32">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         {habitsList.map((habit) => {
                             const isSelected = selectedHabitsIds.includes(habit.id);
                             return (
@@ -53,55 +54,56 @@ const HabitsPage = () => {
                                     key={habit.id}
                                     onClick={() => toggleHabit(habit.id)}
                                     className={`
-                                        group relative w-full h-full p-5 rounded-3xl border cursor-pointer 
-                                        transition-all duration-300 ease-out flex flex-col justify-between overflow-hidden
-                                        hover:shadow-xl active:scale-[0.99]
-                                        ${isSelected
-                                            ? `${habit.activeBorder} bg-slate-900/90 shadow-[0_0_30px_-10px_rgba(0,0,0,0.7)]`
-                                            : 'border-slate-800/60 bg-slate-900/20 hover:bg-slate-900/40 hover:border-slate-700'
-                                        }
+                                        group relative overflow-hidden rounded-3xl p-1 cursor-pointer transition-all duration-300
+                                        ${isSelected ? 'scale-[1.02]' : 'hover:scale-[1.01]'}
                                     `}
                                 >
-                                    {/* Gradient BG */}
-                                    <div className={`absolute inset-0 bg-linear-to-br ${habit.gradient} opacity-0 transition-opacity duration-500 ${isSelected ? 'opacity-100' : 'group-hover:opacity-30'}`} />
+                                    {/* Animated Border Gradient */}
+                                    <div className={`absolute inset-0 bg-gradient-to-r ${isSelected ? 'from-cyan-500 via-blue-500 to-purple-600 animate-spin-slow' : 'from-slate-800 to-slate-900'} opacity-100 transition-all duration-500`} />
+                                    
+                                    {/* Inner Card Content */}
+                                    <div className="relative h-full bg-slate-950/90 backdrop-blur-xl rounded-[22px] p-6 flex flex-col justify-between border border-white/5 group-hover:bg-slate-900/90 transition-colors">
+                                        
+                                        <div className="flex justify-between items-start mb-4">
+                                            {/* Icon Box */}
+                                            <div className={`
+                                                w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-2xl
+                                                bg-gradient-to-br ${habit.gradient}
+                                            `}>
+                                                <habit.icon className="w-7 h-7" />
+                                            </div>
 
-                                    {/* Card Top Row: Icon + Checkbox */}
-                                    <div className="flex justify-between items-start relative z-10 mb-2">
-                                        <div className={`p-3 rounded-xl bg-slate-950 border border-slate-800 shadow-lg transition-all duration-300 ${isSelected ? 'scale-110 ring-1 ' + habit.color.replace('text-', 'ring-') : ''}`}>
-                                            <habit.icon className={`w-6 h-6 ${habit.color}`} />
+                                            {/* Checkbox UI */}
+                                            <div className={`
+                                                w-8 h-8 rounded-lg border-2 flex items-center justify-center transition-all duration-300
+                                                ${isSelected 
+                                                    ? 'border-cyan-500 bg-cyan-500/20 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.5)]' 
+                                                    : 'border-slate-700 bg-slate-800/50'
+                                                }
+                                            `}>
+                                                <Check className={`w-5 h-5 font-bold transition-all ${isSelected ? 'scale-100' : 'scale-0'}`} />
+                                            </div>
                                         </div>
 
-                                        <div className={`
-                                            w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300
-                                            ${isSelected
-                                                ? `${habit.activeBorder} bg-slate-800 text-white shadow-lg scale-105`
-                                                : 'border-slate-700/50 bg-slate-950/30'
-                                            }
-                                        `}>
-                                            <Check className={`w-4 h-4 transition-all duration-300 ${isSelected ? 'opacity-100' : 'opacity-0'}`} />
+                                        <div className="space-y-2">
+                                            <h3 className="text-2xl font-black text-white uppercase tracking-wide group-hover:text-cyan-200 transition-colors">
+                                                {habit.title}
+                                            </h3>
+                                            <p className="text-slate-400 text-sm font-medium leading-relaxed">
+                                                {habit.description}
+                                            </p>
                                         </div>
-                                    </div>
 
-                                    {/* Card Middle: Text Info */}
-                                    <div className="flex-1 flex flex-col justify-center relative z-10 space-y-1">
-                                        <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight group-hover:text-emerald-50 transition-colors">
-                                            {habit.title}
-                                        </h3>
-                                        <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">{habit.subtitle}</p>
-                                        <p className="text-slate-500 text-sm leading-tight line-clamp-2 mt-1">
-                                            {habit.description}
-                                        </p>
-                                    </div>
-
-                                    {/* Card Bottom: Stats (Compact) */}
-                                    <div className="flex items-center gap-2 mt-2 relative z-10">
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-[10px] font-bold text-slate-300 uppercase tracking-wider backdrop-blur-md">
-                                            <Calendar className="w-3 h-3 text-slate-500" />
-                                            {habit.days} Days
-                                        </div>
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase tracking-wider backdrop-blur-md">
-                                            <Zap className="w-3 h-3" />
-                                            {habit.points} Pts
+                                        {/* Stats Footer */}
+                                        <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-4">
+                                            <div className="flex items-center gap-2 text-xs font-bold text-slate-300 bg-slate-800/50 px-3 py-1.5 rounded-lg border border-white/5">
+                                                <Sword className="w-3 h-3 text-purple-400" />
+                                                <span>{habit.days} Day Campaign</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-xs font-bold text-slate-300 bg-slate-800/50 px-3 py-1.5 rounded-lg border border-white/5">
+                                                <Zap className="w-3 h-3 text-yellow-400" />
+                                                <span>+{habit.points} XP</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -111,50 +113,29 @@ const HabitsPage = () => {
                 </main>
             </div>
 
-            {/* --- Sticky Bottom Action Bar (Overlay) --- */}
-            <div className={`
-                absolute bottom-6 left-0 right-0 z-50 px-4 md:px-6
-                transition-transform duration-500 ease-in-out
-                ${selectedHabitsIds.length > 0 ? 'translate-y-0' : 'translate-y-[150%]'}
-            `}>
-                <div className="max-w-xl mx-auto">
-                    <div className="bg-slate-900/90 backdrop-blur-2xl border border-slate-700/50 rounded-2xl p-3 shadow-2xl flex items-center justify-between ring-1 ring-white/10">
-
-                        <div className="flex items-center gap-4 pl-3">
-                            <div className="flex items-baseline gap-2">
-                                <span className="text-3xl font-black text-white">{selectedHabitsIds.length}</span>
-                                <div className="flex flex-col leading-none">
-                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Selected</span>
-                                    <span className="text-xs font-bold text-emerald-400">Habits</span>
-                                </div>
-                            </div>
+            {/* Floating Action Bar */}
+            <div className={`fixed bottom-0 left-0 right-0 p-6 z-50 bg-gradient-to-t from-black via-black/90 to-transparent transition-transform duration-500 ${selectedHabitsIds.length > 0 ? 'translate-y-0' : 'translate-y-full'}`}>
+                <div className="max-w-3xl mx-auto bg-[#18181b] border border-slate-700/50 rounded-2xl p-4 shadow-2xl flex items-center justify-between ring-1 ring-white/10">
+                    <div className="flex items-center gap-4 px-2">
+                        <div className="h-10 w-10 rounded-full bg-cyan-500 flex items-center justify-center font-black text-black">
+                            {selectedHabitsIds.length}
                         </div>
-                        <Link to={"/"}>
-                            <button className="
-                            relative overflow-hidden rounded-xl bg-linear-to-r from-emerald-500 to-cyan-600 
-                            px-6 py-3 text-white font-bold text-sm shadow-lg shadow-emerald-500/20
-                            transition-all hover:scale-[1.02] active:scale-[0.95]
-                            group whitespace-nowrap flex items-center gap-2
-                        " onClick={handleClickStart}>
-                                <span>Start Journey</span>
-                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                {/* Shimmer */}
-                                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/20 to-transparent" />
-                            </button>
-                        </Link>
+                        <div>
+                            <p className="text-white font-bold text-sm">Quests Selected</p>
+                            <p className="text-slate-500 text-xs">Ready to begin?</p>
+                        </div>
                     </div>
+                    
+                    <Link to="/" onClick={handleClickStart}>
+                        <button className="relative group overflow-hidden rounded-xl bg-white px-8 py-3.5 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-20 group-hover:opacity-100 transition-opacity duration-300" />
+                            <span className="relative flex items-center gap-2 text-black font-black uppercase tracking-wider text-sm">
+                                Start Game <ArrowRight className="w-4 h-4" />
+                            </span>
+                        </button>
+                    </Link>
                 </div>
             </div>
-
-            <style>{`
-                .animate-pulse-slow {
-                    animation: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-                }
-                @keyframes pulse {
-                    0%, 100% { opacity: 0.3; transform: scale(1); }
-                    50% { opacity: 0.6; transform: scale(1.05); }
-                }
-            `}</style>
         </div>
     );
 };
