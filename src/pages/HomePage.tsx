@@ -1,187 +1,174 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { Flame } from 'lucide-react';
+import { Flame, Activity, LayoutDashboard, Calendar } from 'lucide-react';
 import SelectedHabbits from '../components/SelectedHabbits';
 import habitsForHomePage from '../data/HabitsListForHomePage';
 import SleepForm from '../components/forms/SleepForm';
 import ReadForm from '../components/forms/ReadForm';
 import EatForm from '../components/forms/EatForm';
 import ExcerciseForm from '../components/forms/ExcerciseForm';
-import SleepHistoryCard from '../components/SleepHistoryCard';
 import api from '../api/axiosConfig';
+import SleepHistoryCard from '../components/SleepHistoryCard';
 
 const HomePage = () => {
     const [activeTab, setActiveTab] = useState(1);
+    const [onGoingDate, setOnGoingDate] = useState("0");
+    const [logsData, setLogsData] = useState<any[]>([]);
 
-    // Safety check: Ensure habitsForHomePage exists and has items
     const currentHabit = habitsForHomePage?.find(h => h.id === activeTab) || habitsForHomePage?.[0];
-
-    // Safely parse localStorage
     const selectedHabitIds = JSON.parse(localStorage.getItem("habitsList") || "[]");
-
+    
     const filteredHabits = habitsForHomePage?.filter((habit) => {
         return selectedHabitIds.includes(habit.id);
     }) || [];
 
-    const [onGoingDate, setOnGoingDate] = useState("0"); // Default to string "0"
-    const [logsData, setLogsData] = useState<any[]>([]); // Initialize as empty array
-
-    // Get Current Ongoing Date
+    // Keep existing data fetching logic...
     useEffect(() => {
         let isMounted = true;
         const accessToken = localStorage.getItem("accessToken");
-
         const getOnGoingDate = async () => {
             try {
-                const res = await api.get("/habit/getcurrentdate", {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                });
-                // Safety check: Ensure data exists before setting
-                if (isMounted && res.data && res.data.data !== undefined) {
-                    setOnGoingDate(String(res.data.data));
-                }
-            } catch (err) {
-                console.log("Error fetching date:", err);
-            }
+                const res = await api.get("/habit/getcurrentdate", {headers: { Authorization: `Bearer ${accessToken}` }});
+                if (isMounted && res.data && res.data.data !== undefined) setOnGoingDate(String(res.data.data));
+            } catch (err) { console.log(err); }
         };
-
         if (accessToken) getOnGoingDate();
-
         return () => { isMounted = false; };
     }, []);
 
-    // Get Logs Data
     useEffect(() => {
         const accessToken = localStorage.getItem("accessToken");
-
         const getAllLogs = async () => {
             try {
-                const res = await api.get("/habit/getuserAllLogs", {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                });
-
-                // CRITICAL FIX: Handle undefined userLogs for new users
+                const res = await api.get("/habit/getuserAllLogs", {headers: { Authorization: `Bearer ${accessToken}` }});
                 const logs = res.data?.data?.userLogs || [];
                 setLogsData(logs);
-
-            } catch (err) {
-                console.log("Error fetching logs:", err);
-                setLogsData([]); // Fallback to empty array on error
-            }
+            } catch (err) { setLogsData([]); }
         };
-
         if (accessToken) getAllLogs();
     }, []);
 
-    // Prevent rendering if critical data is missing (optional safety)
-    if (!currentHabit) return <div className="p-8 text-white">Loading habits...</div>;
+    if (!currentHabit) return <div className="min-h-screen flex items-center justify-center bg-[#09090b] text-zinc-500 font-mono text-sm">Loading workspace...</div>;
 
     return (
-        <div>
-            <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-8 space-y-10">
-
-                {/* --- Ongoing Habits Section --- */}
-                <SelectedHabbits />
-
-                {/* --- Dynamic Habit Switcher (Mini Navbar) --- */}
-                {/* Only show if we have filtered habits, otherwise user needs to select some first */}
-                {filteredHabits.length > 0 && (
-                    <section className="sticky top-20 z-40 bg-slate-950/80 backdrop-blur-xl border-y border-white/5 py-2 -mx-4 md:-mx-6 px-4 md:px-6">
-                        <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-1">
-                            {filteredHabits.map((habit) => {
-                                const isActive = activeTab === habit.id;
-                                return (
-                                    <button
-                                        key={habit.id}
-                                        onClick={() => setActiveTab(habit.id)}
-                                        className={`
-                                            flex items-center gap-2 px-5 py-2.5 rounded-full border transition-all duration-300 whitespace-nowrap
-                                            ${isActive
-                                                ? `bg-slate-800 text-white border-white/20 shadow-lg ${habit.color.replace('text-', 'shadow-').replace('400', '500')}/20`
-                                                : 'bg-transparent text-slate-500 border-transparent hover:bg-white/5 hover:text-slate-300'
-                                            }
-                                        `}
-                                    >
-                                        <habit.icon className={`w-4 h-4 ${isActive ? habit.color : 'text-slate-500'}`} />
-                                        <span className="text-sm font-semibold">{habit.title}</span>
-                                    </button>
-                                );
-                            })}
+        <div className="min-h-screen bg-[#09090b] text-zinc-200 font-sans selection:bg-indigo-500/30 pb-20">
+            
+            {/* Top Navigation Bar */}
+            <nav className="border-b border-zinc-800 bg-[#09090b]/80 backdrop-blur-md sticky top-0 z-40">
+                <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-zinc-900 border border-zinc-700 rounded-lg flex items-center justify-center">
+                            <LayoutDashboard className="w-4 h-4 text-white" />
                         </div>
-                    </section>
+                        <span className="font-semibold text-white tracking-tight">HabitOS</span>
+                        <span className="text-zinc-600">/</span>
+                        <span className="text-zinc-400 font-medium">Dashboard</span>
+                    </div>
+
+                    {/* Minimal Stats */}
+                    <div className="flex items-center gap-6 text-sm">
+                        <div className="flex items-center gap-2">
+                            <Flame className="w-4 h-4 text-zinc-500" />
+                            <span className="text-zinc-400">Streak:</span>
+                            <span className="text-white font-mono font-medium">{onGoingDate}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Activity className="w-4 h-4 text-zinc-500" />
+                            <span className="text-zinc-400">Status:</span>
+                            <span className="text-emerald-500 font-medium">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div className="max-w-[1600px] mx-auto px-6 md:px-10 pt-8 space-y-8">
+                
+                {/* 1. Habit Switcher (Clean Pills) */}
+                {filteredHabits.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                        {filteredHabits.map((habit) => {
+                            const isActive = activeTab === habit.id;
+                            return (
+                                <button
+                                    key={habit.id}
+                                    onClick={() => setActiveTab(habit.id)}
+                                    className={`
+                                        flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200
+                                        ${isActive 
+                                            ? 'bg-white text-black border-white shadow-sm' 
+                                            : 'bg-zinc-900/50 text-zinc-500 border-zinc-800 hover:border-zinc-600 hover:text-zinc-300'
+                                        }
+                                    `}
+                                >
+                                    <habit.icon className="w-4 h-4" />
+                                    {habit.title}
+                                </button>
+                            );
+                        })}
+                    </div>
                 )}
 
-                {/* --- Dynamic Content Area (Daily Log Form) --- */}
-                <section className="max-w-[1800px] mx-auto">
-                    <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-slate-900/40 backdrop-blur-2xl shadow-2xl">
+                {/* 2. Main Content Grid */}
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                    
+                    {/* Top Section: Active Habits (Full Width) */}
+                    <div className="xl:col-span-12">
+                        <SelectedHabbits />
+                    </div>
 
-                        {/* Dynamic Top Gradient */}
-                        <div className={`absolute top-0 left-0 right-0 h-1 bg-linear-to-r ${currentHabit.bgGradient.replace('from-', 'from-').replace('to-', 'to-').replace('/10', '').replace('/5', '')}`} />
-
-                        <div className="p-8 md:p-10">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                                        Log Today's <span className={currentHabit.color}>{currentHabit.title}</span>
+                    {/* Main Section: The Form Editor */}
+                    <div className="xl:col-span-12">
+                        <div className="bg-zinc-900/30 border border-zinc-800 rounded-2xl overflow-hidden">
+                            
+                            {/* Card Header */}
+                            <div className="border-b border-zinc-800 px-6 py-4 flex items-center justify-between bg-zinc-900/50">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-8 h-8 rounded-md flex items-center justify-center ${currentHabit.color} bg-zinc-950 border border-zinc-800`}>
+                                        <currentHabit.icon className="w-4 h-4" />
+                                    </div>
+                                    <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
+                                        Log Entry: {currentHabit.title}
                                     </h2>
-                                    <p className="text-slate-400 text-sm mt-1">Consistency is the key to mastery.</p>
                                 </div>
-                                <div className="px-4 py-2 rounded-xl bg-slate-950 border border-white/10 flex items-center gap-2">
-                                    <Flame className="w-5 h-5 text-orange-500" />
-                                    <span className="text-sm font-bold text-white">
-                                        {onGoingDate === "0" || !onGoingDate
-                                            ? `Good Luck on 1st Day`
-                                            : `${onGoingDate} Days Completed`}
-                                    </span>
+                                <div className="text-xs text-zinc-500 font-mono">
+                                    {new Date().toLocaleDateString()}
                                 </div>
                             </div>
 
-                            {/* Form Content Switcher */}
-                            <div className="animate-fadeIn">
+                            {/* Form Body */}
+                            <div className="p-6 md:p-10">
                                 {currentHabit.type === 'sleep' && <SleepForm currentDate={onGoingDate} />}
                                 {currentHabit.type === 'reading' && <ReadForm />}
                                 {currentHabit.type === 'exercise' && <ExcerciseForm />}
                                 {currentHabit.type === 'eating' && <EatForm />}
                             </div>
-
                         </div>
                     </div>
-                </section>
 
-                {/* Load History Data According to Habit Type */}
-                {currentHabit.type === 'sleep' && (
-                    <div className="w-full space-y-4">
-                        <h2 className="text-xl font-bold text-white mb-6">Recent Sleep Activities</h2>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            {/* CRITICAL FIX: Safe mapping using Array.isArray check and spread */}
-                            {Array.isArray(logsData) && logsData.length > 0 ? (
-                                [...logsData].reverse().map((log: any) => (
-                                    <SleepHistoryCard key={log._id || log.id} log={log} />
-                                ))
-                            ) : (
-                                <p className="text-slate-500 text-sm italic">No logs found yet. Start logging!</p>
-                            )}
+                    {/* History Section */}
+                    {currentHabit.type === 'sleep' && (
+                        <div className="xl:col-span-12 space-y-4">
+                            <div className="flex items-center gap-2 text-zinc-400">
+                                <Calendar className="w-4 h-4" />
+                                <h3 className="text-sm font-medium uppercase tracking-wider">Recent Logs</h3>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {Array.isArray(logsData) && logsData.length > 0 ? (
+                                    [...logsData].reverse().map((log: any) => (
+                                        <div key={log._id || log.id} className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-4 hover:border-zinc-700 transition-colors">
+                                            <SleepHistoryCard log={log} />
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="col-span-full py-10 text-center border border-dashed border-zinc-800 rounded-xl text-zinc-600 text-sm">
+                                        No entries found in database.
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
-
-            <style>{`
-                .no-scrollbar::-webkit-scrollbar {
-                    display: none;
-                }
-                .no-scrollbar {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-fadeIn {
-                    animation: fadeIn 0.4s ease-out forwards;
-                }
-            `}</style>
         </div>
     );
 };
