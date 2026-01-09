@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Clock, Moon, Sun, Save, BarChart3, Loader2 } from "lucide-react"
+import { Clock, Moon, Info, Activity, BedSingle, Sun } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { saveSleepLog } from "../../store/slices/sleepLogSlice"
 import { useEffect, useState } from "react"
@@ -13,43 +13,56 @@ function SleepForm(props: any) {
     const [sleptAt, setSleptAt] = useState("21:00")
     const [wokeAt, setWokeAt] = useState("07:00")
     const [quality, setQuality] = useState(85)
+    // state to track if the user clicked the button
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    // --- LOGIC: Submit Handler ---
     const handleLogClick = (e: any) => {
         e.preventDefault();
         try {
             if (!sleptAt || !wokeAt) {
                 return toast.error("Fields cannot be empty!");
             }
-            dispatch(saveSleepLog({ wokeAt, sleptAt }))
+            dispatch(
+                saveSleepLog({ wokeAt, sleptAt })
+            )
             setIsSubmitting(true)
         } catch (err) {
-            toast.error("Error: " + err);
+            toast.error("Erro : " + err);
             setIsSubmitting(false)
         }
     }
 
-    // --- LOGIC: Submission Success/Fail Side Effects ---
     useEffect(() => {
         try {
+            // Only run if we are currently submitting and loading has finished
             if (!isLoading && isSubmitting) {
                 if (error) {
                     console.error(error);
                     toast.error("Failed to save sleep log.");
                 } else {
+                    // If there is no error, we assume success
                     console.log(data)
-                    toast.success("Log saved successfully.");
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1500);
+                    toast.success("Sleep log saved successfully!");
                 }
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2500);
+                // Reset the submitting flag so it doesn't fire again automatically
                 setIsSubmitting(false);
             }
-        } catch (err) { console.log(err); }
+        } catch (err) {
+            console.log(err);
+        }
     }, [isLoading, isSubmitting, data, error])
 
-    // --- LOGIC: AI Analysis (For Day 30) ---
+    useEffect(() => {
+        try {
+            console.log(data, error)
+        } catch (err) {
+            console.log(err);
+        }
+    }, [data, error])
+
     const [aiAnalysis, setAiAnalysis] = useState<any>(null)
     const [aiLoading, setAiLoading] = useState(false)
 
@@ -59,18 +72,19 @@ function SleepForm(props: any) {
         const getAiAnalysis = async () => {
             try {
                 setAiLoading(true)
+
                 const accessToken = localStorage.getItem("accessToken")
                 if (!accessToken) return
 
-                // Check for existing analysis
-                const response = await api.get("habit/getFinalAiAnalysis", {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                })
-                
+                const response = await api.get(
+                    "habit/getFinalAiAnalysis",
+                    {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    }
+                )
                 if (response.data.data) {
                     setAiAnalysis(response.data.data)
                 } else {
-                    // Generate new analysis
                     await fetchAiAnalysis()
                 }
             } catch (err) {
@@ -80,145 +94,220 @@ function SleepForm(props: any) {
             }
         }
 
+        // sdsss
         const fetchAiAnalysis = async () => {
             try {
                 const accessToken = localStorage.getItem("accessToken")
                 if (!accessToken) return
 
-                const response = await api.get("habit/generatefinalanalysis", {
-                    headers: { Authorization: `Bearer ${accessToken}` }
-                })
-                
-                const isSaved = await api.post("habit/saveFinalAiAnalysis", 
-                    { aiAnalysis: response.data.data },
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
+                const response = await api.get(
+                    "habit/generatefinalanalysis",
+                    {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    }
                 )
-                
+                const isSaved = await api.post("habit/saveFinalAiAnalysis",
+                    {
+                        aiAnalysis: response.data.data,   // body data here
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                )
                 setAiAnalysis(response.data.data)
-                if (isSaved.status === 200) toast.info("Analysis Generated")
-            } catch (err) { console.error(err) }
+                if (isSaved.status == 200) {
+                    toast.info("Ai Analysis Saved!!")
+                } else {
+                    toast.error("Ai Analysis Not Saved!!")
+                }
+            } catch (err) {
+                console.error("AI analysis failed", err)
+            } finally {
+                setAiLoading(false)
+            }
         }
 
         getAiAnalysis()
     }, [props.currentDate])
 
-    // --- RENDER ---
+
     return (
         <>
-            {props.currentDate < 30 ? (
-                // --- FORM VIEW ---
-                <div className="w-full max-w-3xl mx-auto space-y-8">
-                    
-                    {/* Time Input Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        
-                        {/* Bedtime Input */}
-                        <div className="space-y-2 group">
-                            <label className="flex items-center gap-2 text-xs font-bold text-zinc-500 uppercase tracking-wide group-focus-within:text-indigo-400 transition-colors">
-                                <Moon className="w-3.5 h-3.5" /> Bedtime
-                            </label>
-                            <div className="relative">
-                                <input 
-                                    type="time" 
-                                    value={sleptAt}
-                                    onChange={(e) => setSleptAt(e.target.value)}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white font-mono text-sm focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-all cursor-pointer"
-                                />
+            {props.currentDate < 30 ?
+                // REMOVED: min-h-[80vh] to reduce vertical height
+                <div className="w-full max-w-[1800px] mx-auto flex items-center justify-center">
+
+                    {/* REMOVED: min-h-[700px] -> Let content define height */}
+                    <div className="w-full grid grid-cols-1 lg:grid-cols-12 bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+
+                        {/* LEFT SIDE: Educational Content 
+                    REDUCED: Padding (p-16 -> p-10)
+                */}
+                        <div className="lg:col-span-5 relative p-8 lg:p-10 bg-linear-to-br from-indigo-600/20 via-slate-900/50 to-violet-900/20 border-b lg:border-b-0 lg:border-r border-white/5 flex flex-col justify-between">
+                            {/* Decorative Blobs */}
+                            <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-40">
+                                <div className="absolute top-[-10%] left-[-10%] w-64 h-64 bg-violet-600/30 rounded-full blur-[100px]"></div>
+                                <div className="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-blue-600/20 rounded-full blur-[100px]"></div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4">
+                                        <Activity className="w-3 h-3" /> Challenge Rules
+                                    </div>
+                                    {/* REDUCED: Text size */}
+                                    <h2 className="text-3xl lg:text-4xl font-bold text-white mb-3 leading-tight">
+                                        Introduction to the <br />
+                                        <span className="text-transparent bg-clip-text bg-linear-to-r from-violet-400 to-indigo-400">
+                                            Sleep Habit Challenge
+                                        </span>
+                                    </h2>
+                                    <p className="text-slate-400 text-sm lg:text-base leading-relaxed max-w-md">
+                                        According the World Health Organization (WHO) and global sleep research guidelines.
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-4">
+                                    <div className="flex gap-4 items-center">
+                                        <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center shrink-0 border border-violet-500/10">
+                                            <BedSingle className="w-5 h-5 text-violet-400" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-white text-base font-semibold">Sleep Time</h4>
+                                            <p className="text-xs text-slate-500">Time: 10:00 PM – 11:00 PM - 1 Point </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4 items-center">
+                                        <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0 border border-indigo-500/10">
+                                            <Sun className="w-5 h-5 text-indigo-400" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-white text-base font-semibold">Wakeup Time</h4>
+                                            <p className="text-xs text-slate-500">5:30 AM – 6:30 AM - 1 Point</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-8 pt-6 border-t border-white/5">
+                                <div className="flex items-center gap-3">
+                                    <Info className="w-4 h-4 text-slate-500" />
+                                    <p className="text-xs text-slate-500">
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Wakeup Input */}
-                        <div className="space-y-2 group">
-                            <label className="flex items-center gap-2 text-xs font-bold text-zinc-500 uppercase tracking-wide group-focus-within:text-indigo-400 transition-colors">
-                                <Sun className="w-3.5 h-3.5" /> Wake Up
-                            </label>
-                            <div className="relative">
-                                <input 
-                                    type="time" 
-                                    value={wokeAt}
-                                    onChange={(e) => setWokeAt(e.target.value)}
-                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white font-mono text-sm focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-all cursor-pointer"
-                                />
+                        {/* RIGHT SIDE: The Form 
+                    REDUCED: Padding (p-20 -> p-10/12)
+                */}
+                        <div className="lg:col-span-7 p-6 lg:p-12 bg-slate-950/40 flex flex-col justify-center items-center">
+
+                            <div className="w-full max-w-2xl space-y-6">
+
+                                <div className="flex items-center justify-between mb-2">
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-white">Log Session</h3>
+                                        <p className="text-slate-400 text-xs mt-1">Record your sleep data accurately.</p>
+                                    </div>
+                                </div>
+
+                                {/* Times Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Slept Time 
+                                REDUCED: Padding (p-6 -> p-4) and Font Size (text-2xl -> text-xl)
+                            */}
+                                    <div className="p-4 rounded-2xl bg-slate-900 border border-white/5 hover:border-violet-500/30 transition-all duration-300 group shadow-lg shadow-black/20">
+                                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-2 group-hover:text-violet-400 transition-colors">Bedtime</label>
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-violet-500/10 group-hover:bg-violet-500/20 transition-colors">
+                                                <Moon className="w-5 h-5 text-violet-400" />
+                                            </div>
+                                            <input type="time" className="bg-transparent text-xl font-bold text-white outline-none w-full scheme-dark cursor-pointer"
+                                                value={sleptAt}
+                                                onChange={(e) => setSleptAt(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Wake up Time 
+                                REDUCED: Padding (p-6 -> p-4) and Font Size (text-2xl -> text-xl)
+                            */}
+                                    <div className="p-4 rounded-2xl bg-slate-900 border border-white/5 hover:border-indigo-500/30 transition-all duration-300 group shadow-lg shadow-black/20">
+                                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-2 group-hover:text-indigo-400 transition-colors">Wake Up</label>
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-indigo-500/10 group-hover:bg-indigo-500/20 transition-colors">
+                                                <Clock className="w-5 h-5 text-indigo-400" />
+                                            </div>
+                                            <input type="time" className="bg-transparent text-xl font-bold text-white outline-none w-full scheme-dark cursor-pointer"
+                                                value={wokeAt}
+                                                onChange={(e) => setWokeAt(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Quality Slider */}
+                                <div className="p-6 rounded-2xl bg-slate-900 border border-white/5 shadow-lg shadow-black/20">
+                                    <div className="flex justify-between items-end mb-4">
+                                        <div>
+                                            <label className="text-base font-bold text-white block mb-0.5">Sleep Quality</label>
+                                            <span className="text-xs text-slate-500">How refreshed do you feel?</span>
+                                        </div>
+                                        <div className={`flex items-baseline gap-1 ${quality > 80 ? 'text-emerald-400' : quality > 50 ? 'text-yellow-400' : 'text-rose-400'}`}>
+                                            <span className="text-3xl font-black">{quality}</span>
+                                            <span className="text-sm font-bold">%</span>
+                                        </div>
+                                    </div>
+
+                                    <input
+                                        type="range"
+                                        min="0" max="100"
+                                        value={quality}
+                                        onChange={(e) => setQuality(parseInt(e.target.value))}
+                                        className="w-full h-2 bg-slate-800 rounded-full appearance-none cursor-pointer accent-violet-500 hover:accent-violet-400 transition-all mb-3"
+                                    />
+
+                                    <div className="flex justify-between text-[10px] uppercase tracking-widest text-slate-600 font-bold px-1">
+                                        <span>Tired</span>
+                                        <span>Okay</span>
+                                        <span>Great</span>
+                                    </div>
+                                </div>
+
+                                {/* Submit Button */}
+                                <button disabled={isLoading} className="w-full py-4 rounded-xl font-bold text-lg text-white shadow-xl 
+                            bg-linear-to-r from-violet-600 to-indigo-600 
+                            hover:from-violet-500 hover:to-indigo-500
+                            hover:scale-[1.01] active:scale-[0.99] 
+                            shadow-violet-900/20
+                            transition-all duration-300 flex items-center justify-center gap-2 mt-2"
+                                    onClick={handleLogClick}
+                                >
+                                    {isLoading ? (
+                                        <span className="flex items-center gap-2">Saving...</span>
+                                    ) : (
+                                        <>Log Sleep Activity <Activity className="w-5 h-5" /></>
+                                    )}
+                                </button >
                             </div>
                         </div>
-                    </div>
-
-                    <div className="h-px w-full bg-zinc-800/50" />
-
-                    {/* Quality Slider */}
-                    <div className="space-y-4">
-                        <div className="flex justify-between items-end">
-                            <div>
-                                <label className="text-sm font-medium text-zinc-200 block mb-1">Recovery Score</label>
-                                <p className="text-xs text-zinc-500">Subjective analysis of rest quality.</p>
-                            </div>
-                            <div className="flex items-baseline gap-1">
-                                <span className={`text-2xl font-mono font-bold ${quality > 80 ? 'text-emerald-400' : quality > 50 ? 'text-yellow-400' : 'text-red-400'}`}>
-                                    {quality}
-                                </span>
-                                <span className="text-xs font-bold text-zinc-600">%</span>
-                            </div>
-                        </div>
-                        
-                        <div className="relative h-6 flex items-center">
-                            <input
-                                type="range"
-                                min="0" max="100"
-                                value={quality}
-                                onChange={(e) => setQuality(parseInt(e.target.value))}
-                                className="w-full h-1.5 bg-zinc-950 rounded-full appearance-none cursor-pointer border border-zinc-800 accent-white hover:accent-zinc-200 transition-all"
-                            />
-                        </div>
-                        
-                        <div className="flex justify-between px-1">
-                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-wider">Lethargic</span>
-                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-wider">Optimal</span>
-                        </div>
-                    </div>
-
-                    {/* Submit Action */}
-                    <div className="pt-4">
-                        <button 
-                            disabled={isLoading}
-                            onClick={handleLogClick}
-                            className="w-full bg-white hover:bg-zinc-200 text-black px-6 py-3.5 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-white/5"
-                        >
-                            {isLoading ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                                <>
-                                    <Save className="w-4 h-4" />
-                                    <span>Commit Entry</span>
-                                </>
-                            )}
-                        </button>
                     </div>
                 </div>
-
-            ) : (
-                // --- AI ANALYSIS VIEW (Day 30+) ---
-                <div className="w-full min-h-[400px] flex flex-col items-center justify-center">
-                    {aiLoading ? (
-                        <div className="text-center space-y-4">
-                            <div className="w-12 h-12 border-2 border-zinc-800 border-t-indigo-500 rounded-full animate-spin mx-auto" />
-                            <p className="text-zinc-500 text-sm font-mono">Compiling final report...</p>
-                        </div>
-                    ) : aiAnalysis ? (
-                        <div className="w-full">
-                            <div className="flex items-center gap-2 mb-6 text-indigo-400 border-b border-zinc-800 pb-4">
-                                <BarChart3 className="w-5 h-5" />
-                                <h3 className="text-sm font-bold uppercase tracking-wider">Performance Analysis</h3>
-                            </div>
-                            <SleepAnalysis analysis={aiAnalysis} />
-                        </div>
-                    ) : (
-                        <div className="text-center py-12 border border-dashed border-zinc-800 rounded-xl w-full">
-                            <Clock className="w-8 h-8 text-zinc-700 mx-auto mb-3" />
-                            <p className="text-zinc-500 text-sm">No analysis data available.</p>
-                        </div>
-                    )}
-                </div>
-            )}
+                : aiLoading ? (
+                    <div className="text-white text-center py-20">
+                        Generating your sleep analysis...
+                    </div>
+                ) : aiAnalysis ? (
+                    <SleepAnalysis analysis={aiAnalysis} />
+                ) : (
+                    <div className="text-slate-400 text-center py-20">
+                        No analysis available yet
+                    </div>
+                )
+            }
         </>
     )
 }
