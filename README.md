@@ -60,29 +60,6 @@ BuildMe helps users form and maintain habits by combining a clean habit-tracking
 
 ---
 
-## Screenshots
-
-Replace the placeholder images below with actual screenshots from the `public/screenshots/` (or appropriate) folder in the repo.
-
-- Dashboard / Overview  
-  ![Dashboard](./public/screenshots/dashboard.png)
-
-- Create Habit  
-  ![Create Habit](./public/screenshots/create-habit.png)
-
-- Habit Details / Calendar / Streaks  
-  ![Habit Details](./public/screenshots/habit-details.png)
-
-- AI Adviser Chat / Suggestions  
-  ![AI Adviser](./public/screenshots/adviser-chat.png)
-
-If you don't yet have screenshots, create a `public/screenshots/` directory and add images named as above, or update the paths to wherever screenshots are stored. Use these commands locally to preview:
-
-- Preview locally (after following setup below) and capture screenshots with the browser dev tools or OS screenshot tool.
-- Commit screenshots to `public/screenshots/` and push to repo so they show up in README when hosted.
-
----
-
 ## Repository structure (frontend — example)
 
 The actual structure may vary. Typical layout:
@@ -255,12 +232,6 @@ Contributions are welcome! Suggested workflow:
 - Open a Pull Request describing changes
 
 Please include testing steps and screenshots for UI changes.
-
----
-
-## License
-
-Specify your project license here (e.g., MIT). Add a `LICENSE` file at repo root.
 
 ---
 
