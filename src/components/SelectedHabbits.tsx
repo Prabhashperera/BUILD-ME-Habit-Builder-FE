@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChevronRight, Star } from 'lucide-react';
-// Make sure this path points to the file you just shared
+import { ChevronRight, Star, Activity } from 'lucide-react';
 import habits from '../data/habitsList';
 import { useEffect, useState } from 'react';
 import api from '../api/axiosConfig';
@@ -42,7 +41,7 @@ function SelectedHabbits() {
     }, [])
 
     // --- LOGIC TO STRETCH CARDS ---
-    // Updated grid logic for the new clean layout
+    // Returns grid class based on count to ensure full width usage
     const getGridClassName = (count: number) => {
         switch (count) {
             case 1:
@@ -52,92 +51,97 @@ function SelectedHabbits() {
             case 3:
                 return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
             default:
-                // 4+ items: Full width 4-column grid on large screens
                 return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
         }
     }
 
     return (
-        <div className="w-full">
-            <section>
-                <div className="flex items-center justify-between mb-4 px-1">
-                    <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Active Stack</h2>
-                    <button className="text-[10px] font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1 uppercase tracking-wider">
-                        View All <ChevronRight className="w-3 h-3" />
-                    </button>
+        <section className="w-full mb-8">
+            {/* Header: Minimalist Divider Style */}
+            <div className="flex items-center justify-between mb-6 px-1">
+                <div className="flex items-center gap-3">
+                    <div className="p-1.5 rounded-md bg-white/10 backdrop-blur-md">
+                        <Activity className="w-3.5 h-3.5 text-white/80" />
+                    </div>
+                    <h2 className="text-xs font-medium text-white/50 uppercase tracking-[0.2em]">Active Protocols</h2>
                 </div>
+                
+                <button className="group flex items-center gap-2 text-[10px] font-medium text-white/40 hover:text-white transition-colors uppercase tracking-widest">
+                    View All 
+                    <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
+                </button>
+            </div>
 
-                {/* UPDATED: Dynamic Grid Class */}
-                <div className={`grid gap-4 w-full ${getGridClassName(selectedHabits.length)}`}>
+            {/* GRID: Glass Bento Tiles */}
+            <div className={`grid gap-4 w-full ${getGridClassName(selectedHabits.length)}`}>
 
-                    {selectedHabits.map((habit) => {
-                        // 4. Safe Data Lookup
-                        const data = progressData[habit.type] || progressData[habit.type.toLowerCase()];
+                {selectedHabits.map((habit) => {
+                    const data = progressData[habit.type] || progressData[habit.type.toLowerCase()];
+                    const currentProgress = data?.progress ?? 0;
+                    
+                    return (
+                        <div
+                            key={habit.id}
+                            className={`
+                                group relative p-6 rounded-3xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
+                                bg-[#0f0f0f]/40 border border-white/5 backdrop-blur-xl
+                                hover:bg-white/5 hover:border-white/10 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.05)]
+                                overflow-hidden
+                            `}
+                        >
+                            {/* Ambient Light Blob (Matches Habit Color) */}
+                            <div className={`absolute -right-8 -top-8 w-32 h-32 bg-gradient-to-br ${habit.gradient} opacity-0 group-hover:opacity-20 blur-[60px] transition-opacity duration-700`} />
 
-                        // 5. Default values if data is missing
-                        const currentProgress = data?.progress ?? 0;
-                        const hasStarted = !!data;
-
-                        return (
-                            <div
-                                key={habit.id}
-                                className={`
-                                    group relative p-5 rounded-xl border transition-all duration-200
-                                    bg-zinc-900 border-zinc-800 hover:border-zinc-600
-                                    flex flex-col gap-4 overflow-hidden
-                                `}
-                            >
-                                {/* Header Row */}
-                                <div className="flex justify-between items-start relative z-10">
-                                    <div className={`
-                                        p-2.5 rounded-lg border border-zinc-800 bg-zinc-950 flex items-center justify-center
-                                        ${habit.color.replace('text-', 'text-opacity-80 text-')}
-                                    `}>
-                                        <habit.icon className="w-5 h-5" />
+                            <div className="relative z-10 flex flex-col h-full justify-between gap-6">
+                                
+                                {/* Top Row: Icon & XP */}
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`
+                                            w-10 h-10 rounded-2xl flex items-center justify-center 
+                                            bg-white/5 border border-white/5 text-white/80 
+                                            group-hover:bg-white/10 group-hover:text-white group-hover:scale-105 transition-all duration-300
+                                        `}>
+                                            <habit.icon className="w-5 h-5" />
+                                        </div>
+                                        
+                                        <div>
+                                            <h3 className="text-sm font-medium text-white tracking-wide">{habit.title}</h3>
+                                            <p className="text-[10px] font-medium text-white/30 uppercase tracking-wider mt-0.5">
+                                                Lvl {Math.floor((data?.currentDays ?? 0) / 7) + 1}
+                                            </p>
+                                        </div>
                                     </div>
-                                    
-                                    <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-zinc-950 border border-zinc-800">
-                                        <Star className="w-3 h-3 text-zinc-500 fill-zinc-500" />
-                                        <span className="text-xs font-mono font-bold text-zinc-300">
-                                            {data?.currentPoints ?? 0}
-                                        </span>
+
+                                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/5">
+                                        <Star className="w-3 h-3 text-white/60 fill-white/10" />
+                                        <span className="text-xs font-medium text-white/80">{data?.currentPoints ?? 0}</span>
                                     </div>
                                 </div>
 
-                                {/* Title & Stats Row */}
-                                <div className="relative z-10">
-                                    <h3 className="text-sm font-bold text-zinc-200 mb-1 truncate">
-                                        {habit.title}
-                                    </h3>
-                                    <div className="flex justify-between items-center text-xs text-zinc-500 font-medium">
-                                        <span>Consistency</span>
-                                        <span className="text-zinc-400">{data?.currentDays ?? 0} / {habit.days} Days</span>
-                                    </div>
-                                </div>
-
-                                {/* Progress Bar Row */}
-                                <div className="relative z-10 space-y-2 mt-auto">
-                                    <div className="flex justify-between text-[10px] font-bold text-zinc-600 uppercase tracking-wider">
-                                        <span>Progress</span>
-                                        <span className={habit.color}>{currentProgress}%</span>
+                                {/* Bottom Row: Progress */}
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-end">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-medium text-white/30 uppercase tracking-wider">Completion</span>
+                                        </div>
+                                        <span className="text-xl font-medium text-white tracking-tight">{currentProgress}%</span>
                                     </div>
                                     
-                                    {/* Tech-Style Slim Bar */}
-                                    <div className="h-1.5 w-full bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/50">
+                                    {/* Ultra-Thin Glowing Bar */}
+                                    <div className="h-[2px] w-full bg-white/10 rounded-full overflow-hidden">
                                         <div
-                                            className={`h-full rounded-full ${habit.color.replace('text-', 'bg-')} transition-all duration-1000 ease-out opacity-90`}
-                                            style={{
-                                                width: hasStarted ? `${currentProgress}%` : '5%'
-                                            }}
+                                            className={`h-full rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.6)] transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)]`}
+                                            style={{ width: `${currentProgress}%` }}
                                         />
                                     </div>
                                 </div>
                             </div>
-                        );
-                    })}
-                </div>
-            </section>
-        </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </section>
     )
 }
 
