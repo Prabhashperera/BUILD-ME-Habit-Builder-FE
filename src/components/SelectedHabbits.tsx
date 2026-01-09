@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronRight, Star } from 'lucide-react';
 // Make sure this path points to the file you just shared
 import habits from '../data/habitsList';
@@ -41,32 +42,33 @@ function SelectedHabbits() {
     }, [])
 
     // --- LOGIC TO STRETCH CARDS ---
-    // This function returns the correct grid class based on how many items exist
+    // Updated grid logic for the new clean layout
     const getGridClassName = (count: number) => {
         switch (count) {
             case 1:
-                return "grid-cols-1"; // 1 item? Full width
+                return "grid-cols-1";
             case 2:
-                return "grid-cols-1 md:grid-cols-2"; // 2 items? Split in half
+                return "grid-cols-1 md:grid-cols-2";
             case 3:
-                return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"; // 3 items? Thirds
+                return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
             default:
-                return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"; // 4+ items? Quarters
+                // 4+ items: Full width 4-column grid on large screens
+                return "grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
         }
     }
 
     return (
-        <div>
+        <div className="w-full">
             <section>
-                <div className="flex items-center justify-between mb-6 px-2">
-                    <h2 className="text-2xl font-bold text-white tracking-tight">Your Journey</h2>
-                    <button className="text-sm font-medium text-slate-400 hover:text-white transition-colors flex items-center gap-1">
-                        View All <ChevronRight className="w-4 h-4" />
+                <div className="flex items-center justify-between mb-4 px-1">
+                    <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Active Stack</h2>
+                    <button className="text-[10px] font-medium text-zinc-500 hover:text-white transition-colors flex items-center gap-1 uppercase tracking-wider">
+                        View All <ChevronRight className="w-3 h-3" />
                     </button>
                 </div>
 
                 {/* UPDATED: Dynamic Grid Class */}
-                <div className={`grid gap-5 ${getGridClassName(selectedHabits.length)}`}>
+                <div className={`grid gap-4 w-full ${getGridClassName(selectedHabits.length)}`}>
 
                     {selectedHabits.map((habit) => {
                         // 4. Safe Data Lookup
@@ -80,57 +82,58 @@ function SelectedHabbits() {
                             <div
                                 key={habit.id}
                                 className={`
-                                    group relative p-6 rounded-3xl border bg-slate-900/40 backdrop-blur-md transition-all duration-300
-                                    hover:-translate-y-1 hover:shadow-2xl 
-                                    border-white/5 hover:border-white/20 overflow-hidden cursor-pointer
-                                    ${habit.activeBorder} 
+                                    group relative p-5 rounded-xl border transition-all duration-200
+                                    bg-zinc-900 border-zinc-800 hover:border-zinc-600
+                                    flex flex-col gap-4 overflow-hidden
                                 `}
                             >
-                                {/* Gradient Background */}
-                                <div className={`absolute inset-0 bg-linear-to-br ${habit.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-
-                                <div className="relative z-10 flex flex-col h-full justify-between gap-5">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-start">
-                                        <div className={`p-3.5 rounded-2xl bg-slate-950/50 border border-white/10 ${habit.color}`}>
-                                            <habit.icon className="w-7 h-7" />
-                                        </div>
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm">
-                                            <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-                                            <span className="text-sm font-bold text-white">
-                                                {data?.currentPoints ?? 0}
-                                            </span>
-                                        </div>
+                                {/* Header Row */}
+                                <div className="flex justify-between items-start relative z-10">
+                                    <div className={`
+                                        p-2.5 rounded-lg border border-zinc-800 bg-zinc-950 flex items-center justify-center
+                                        ${habit.color.replace('text-', 'text-opacity-80 text-')}
+                                    `}>
+                                        <habit.icon className="w-5 h-5" />
                                     </div>
-
-                                    {/* Info */}
-                                    <div>
-                                        <h3 className="text-xl font-bold text-white mb-1.5 group-hover:text-emerald-50 transition-colors">
-                                            {habit.title}
-                                        </h3>
-                                        <p className="text-sm font-medium text-slate-400">
-                                            {data?.currentDays ?? 0} / {habit.days} Days Completed
-                                        </p>
+                                    
+                                    <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-zinc-950 border border-zinc-800">
+                                        <Star className="w-3 h-3 text-zinc-500 fill-zinc-500" />
+                                        <span className="text-xs font-mono font-bold text-zinc-300">
+                                            {data?.currentPoints ?? 0}
+                                        </span>
                                     </div>
+                                </div>
 
-                                    {/* Progress Bar */}
-                                    <div className="space-y-2.5">
-                                        <div className="flex justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                            <span>Progress</span>
-                                            <span className={habit.color}>{currentProgress}%</span>
-                                        </div>
-                                        <div className="h-2.5 w-full bg-slate-950 rounded-full overflow-hidden border border-white/5">
-                                            <div
-                                                className={`h-full rounded-full ${habit.color.replace('text-', 'bg-')} transition-all duration-1000 ease-out`}
-                                                style={{
-                                                    width: hasStarted ? `${currentProgress}%` : '5%'
-                                                }}
-                                            />
-                                        </div>
+                                {/* Title & Stats Row */}
+                                <div className="relative z-10">
+                                    <h3 className="text-sm font-bold text-zinc-200 mb-1 truncate">
+                                        {habit.title}
+                                    </h3>
+                                    <div className="flex justify-between items-center text-xs text-zinc-500 font-medium">
+                                        <span>Consistency</span>
+                                        <span className="text-zinc-400">{data?.currentDays ?? 0} / {habit.days} Days</span>
+                                    </div>
+                                </div>
+
+                                {/* Progress Bar Row */}
+                                <div className="relative z-10 space-y-2 mt-auto">
+                                    <div className="flex justify-between text-[10px] font-bold text-zinc-600 uppercase tracking-wider">
+                                        <span>Progress</span>
+                                        <span className={habit.color}>{currentProgress}%</span>
+                                    </div>
+                                    
+                                    {/* Tech-Style Slim Bar */}
+                                    <div className="h-1.5 w-full bg-zinc-950 rounded-full overflow-hidden border border-zinc-800/50">
+                                        <div
+                                            className={`h-full rounded-full ${habit.color.replace('text-', 'bg-')} transition-all duration-1000 ease-out opacity-90`}
+                                            style={{
+                                                width: hasStarted ? `${currentProgress}%` : '5%'
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </div>
-                        )
+                        );
                     })}
                 </div>
             </section>
