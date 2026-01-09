@@ -1,71 +1,71 @@
-import { Calendar, Sparkles, Zap, Clock, ArrowRight } from "lucide-react";
+import { Calendar, Sparkles, Zap, ArrowRight } from "lucide-react";
 
-// Types for your data (Adjust based on your actual API response)
+// Types for your data
 interface LogEntry {
     id: string | number;
     date: string;
     sleptAt: string;
     wokeAt: string;
-    // quality: number
     pointsAwarded: number;
     aiAdvice: string;
 }
 
-// --- 1. Single Card Component ---
 const SleepHistoryCard = ({ log }: { log: LogEntry }) => {
     return (
-        <div className="group relative bg-slate-900 border border-white/5 rounded-2xl p-6 hover:border-violet-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/10">
-
-            {/* Header: Date & Points */}
-            <div className="flex justify-between items-start mb-6">
-
-                {/* Date Badge */}
-                <div className="flex items-center gap-2 text-slate-400 bg-slate-950/50 px-3 py-1.5 rounded-lg border border-white/5">
-                    <Calendar className="w-4 h-4" />
-                    <span className="text-sm font-semibold">{log.date.split("T")[0]}</span>
-                </div>
-
-                {/* Gamified Points Badge */}
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950 border border-violet-500/20 shadow-inner group-hover:border-violet-500/50 transition-colors">
-                    <Zap className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                    <span className="text-base font-black text-transparent bg-clip-text bg-linear-to-r from-yellow-300 to-yellow-500">
-                        +{log.pointsAwarded} XP
-                    </span>
-                </div>
-            </div>
-
-            {/* Main Content: Time & Advice */}
-            <div className="space-y-4">
-
-                {/* Time Stats Row */}
-                <div className="flex items-center gap-4 text-sm text-slate-300">
-                    <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-violet-400" />
-                        <span className="font-mono">{log.sleptAt}</span>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-600" />
-                    <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-indigo-400" />
-                        <span className="font-mono">{log.wokeAt}</span>
+        <div className="group relative w-full h-full">
+            {/* Ambient Hover Glow */}
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/20 to-fuchsia-500/20 rounded-[1.7rem] blur opacity-0 group-hover:opacity-100 transition duration-500" />
+            
+            {/* Glass Container */}
+            <div className="relative h-full bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-6 transition-all duration-300 hover:bg-[#0a0a0a]/90 flex flex-col justify-between">
+                
+                {/* --- Top Row: Date & XP Chip --- */}
+                <div className="flex justify-between items-start mb-6">
+                    <div className="flex items-center gap-2 text-white/40">
+                        <Calendar className="w-3.5 h-3.5" />
+                        <span className="text-xs font-medium font-mono tracking-wide">{log.date.split("T")[0]}</span>
                     </div>
 
-                    {/* Optional: Quality Indicator */}
-                    <div className="ml-auto text-xs font-bold text-slate-500 uppercase">
-                        Quality: <span className="text-white">{80}%</span>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 shadow-[0_0_10px_rgba(99,102,241,0.1)]">
+                        <Zap className="w-3 h-3 text-indigo-400 fill-indigo-400" />
+                        <span className="text-[10px] font-bold text-indigo-200 tracking-wider">
+                            +{log.pointsAwarded} XP
+                        </span>
                     </div>
                 </div>
 
-                {/* AI Advice Box */}
-                <div className="relative bg-slate-950/80 rounded-xl p-4 border border-white/5">
-                    {/* Decorative Icon */}
-                    <div className="absolute -top-2 -left-2 bg-slate-900 p-1 rounded-full border border-white/10">
-                        <Sparkles className="w-4 h-4 text-violet-400" />
+                {/* --- Middle Row: Timeline Visualization --- */}
+                <div className="flex items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span className="block text-[10px] font-bold text-white/20 uppercase tracking-widest mb-1">Bedtime</span>
+                        <span className="text-xl font-medium text-white tracking-tight">{log.sleptAt}</span>
                     </div>
 
-                    <p className="text-slate-300 text-sm leading-relaxed">
-                        {log.aiAdvice}
-                    </p>
+                    {/* Timeline Line */}
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent relative">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-1.5 rounded-full bg-[#0a0a0a] border border-white/10">
+                            <ArrowRight className="w-3 h-3 text-white/40" />
+                        </div>
+                    </div>
+
+                    <div className="text-right">
+                        <span className="block text-[10px] font-bold text-white/20 uppercase tracking-widest mb-1">Wake Up</span>
+                        <span className="text-xl font-medium text-white tracking-tight">{log.wokeAt}</span>
+                    </div>
                 </div>
+
+                {/* --- Bottom Row: AI Insight --- */}
+                <div className="relative mt-auto">
+                    <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 group-hover:border-white/10 transition-colors">
+                        <div className="flex gap-3 items-start">
+                            <Sparkles className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5 animate-pulse-slow" />
+                            <p className="text-sm text-white/60 font-light leading-relaxed line-clamp-3">
+                                {log.aiAdvice}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     );
