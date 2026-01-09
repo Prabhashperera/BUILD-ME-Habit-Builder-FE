@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Check, Map, Crown, Sparkles } from 'lucide-react';
+import { Check, ArrowRight, Layers } from 'lucide-react';
 import habitsList from '../data/habitsList';
 import { Link } from 'react-router-dom';
 
@@ -19,33 +19,30 @@ const HabitsPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-emerald-50 font-sans selection:bg-indigo-200 text-slate-800 relative overflow-x-hidden flex flex-col">
+        <div className="min-h-screen bg-[#020617] font-sans text-slate-200 relative overflow-x-hidden flex flex-col">
             
-            {/* Background Decorations */}
-            <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-200/40 rounded-full blur-[100px]" />
-                <div className="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-emerald-200/40 rounded-full blur-[100px]" />
-            </div>
+            {/* Subtle Grid Background */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 pointer-events-none" />
 
-            <div className="relative z-10 w-full px-4 md:px-8 py-8 flex flex-col h-full flex-1 max-w-[1920px] mx-auto">
+            <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 md:px-12 py-12 flex flex-col h-full flex-1">
                 
-                {/* Header */}
-                <header className="py-12 text-center space-y-4">
-                    <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white shadow-lg shadow-indigo-100 border border-indigo-50 animate-bounce-slow">
-                        <Map className="w-5 h-5 text-indigo-500" />
-                        <span className="text-sm font-bold uppercase tracking-wider text-indigo-900">Adventure Awaits</span>
+                {/* Header: Clean, Typography-led */}
+                <header className="mb-12 space-y-2">
+                    <div className="flex items-center gap-2 text-indigo-400 mb-4">
+                        <Layers className="w-5 h-5" />
+                        <span className="text-xs font-semibold uppercase tracking-widest">Setup Workspace</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight">
-                        Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-500">Quests</span>
+                    <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                        Define your stack.
                     </h1>
-                    <p className="text-slate-500 font-medium text-lg max-w-lg mx-auto">
-                        Every habit is a skill tree waiting to be unlocked.
+                    <p className="text-slate-500 text-lg max-w-2xl">
+                        Select the habits you want to track. Consistency is the only metric that matters.
                     </p>
                 </header>
 
-                {/* Quest Grid */}
-                <main className="flex-1 pb-40 w-full">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full">
+                {/* Grid: 4 Columns, Precise Gaps */}
+                <main className="flex-1 pb-32 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
                         {habitsList.map((habit) => {
                             const isSelected = selectedHabitsIds.includes(habit.id);
                             return (
@@ -53,63 +50,43 @@ const HabitsPage = () => {
                                     key={habit.id}
                                     onClick={() => toggleHabit(habit.id)}
                                     className={`
-                                        group relative cursor-pointer transition-all duration-500 ease-out
-                                        hover:-translate-y-2 hover:rotate-1
+                                        group relative cursor-pointer rounded-xl border transition-all duration-200 ease-out
+                                        ${isSelected 
+                                            ? 'bg-indigo-950/20 border-indigo-500/50 ring-1 ring-indigo-500/50' 
+                                            : 'bg-slate-900/50 border-slate-800 hover:border-slate-600 hover:bg-slate-800'
+                                        }
                                     `}
                                 >
-                                    {/* Card Container */}
-                                    <div className={`
-                                        relative h-full rounded-[2.5rem] p-8 border-2 transition-all duration-300 overflow-hidden
-                                        ${isSelected 
-                                            ? 'bg-white border-indigo-500 shadow-2xl shadow-indigo-200 scale-[1.02]' 
-                                            : 'bg-white/60 backdrop-blur-xl border-white hover:border-indigo-200 shadow-xl hover:shadow-2xl shadow-slate-200/50'
-                                        }
-                                    `}>
-                                        
-                                        {/* Header */}
-                                        <div className="flex justify-between items-start mb-6">
+                                    <div className="p-6 h-full flex flex-col">
+                                        <div className="flex justify-between items-start mb-4">
+                                            {/* Icon: Muted, Monochromatic look */}
                                             <div className={`
-                                                w-16 h-16 rounded-3xl flex items-center justify-center text-white shadow-lg transform transition-transform group-hover:scale-110 group-hover:rotate-3
-                                                bg-gradient-to-br ${habit.gradient}
+                                                w-10 h-10 rounded-lg flex items-center justify-center border border-white/5
+                                                ${isSelected ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-400'}
                                             `}>
-                                                <habit.icon className="w-8 h-8" />
+                                                <habit.icon className="w-5 h-5" />
                                             </div>
 
+                                            {/* Checkbox: Technical feel */}
                                             <div className={`
-                                                w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm
+                                                w-5 h-5 rounded border flex items-center justify-center transition-all duration-200
                                                 ${isSelected 
-                                                    ? 'bg-indigo-500 text-white scale-110 rotate-12' 
-                                                    : 'bg-slate-100 text-slate-300 group-hover:bg-indigo-50'
+                                                    ? 'border-indigo-500 bg-indigo-500 text-white' 
+                                                    : 'border-slate-700 bg-slate-900/50'
                                                 }
                                             `}>
-                                                <Check className="w-6 h-6 stroke-[3px]" />
+                                                <Check className={`w-3 h-3 stroke-[3px] transition-transform ${isSelected ? 'scale-100' : 'scale-0'}`} />
                                             </div>
                                         </div>
 
-                                        {/* Content */}
-                                        <div className="space-y-3 mb-8">
-                                            <h3 className={`text-2xl font-black ${isSelected ? 'text-indigo-900' : 'text-slate-800'}`}>
+                                        <div className="space-y-2">
+                                            <h3 className={`text-lg font-semibold ${isSelected ? 'text-white' : 'text-slate-300'}`}>
                                                 {habit.title}
                                             </h3>
-                                            <p className="text-slate-500 font-medium leading-relaxed">
+                                            <p className="text-slate-500 text-sm leading-relaxed">
                                                 {habit.description}
                                             </p>
                                         </div>
-
-                                        {/* Game Stats Badge */}
-                                        <div className="flex items-center gap-3">
-                                            <span className="px-4 py-2 rounded-xl bg-amber-50 text-amber-600 text-xs font-bold uppercase tracking-wider border border-amber-100 flex items-center gap-2">
-                                                <Crown className="w-4 h-4 fill-amber-500" /> {habit.points} XP
-                                            </span>
-                                            <span className="px-4 py-2 rounded-xl bg-slate-50 text-slate-500 text-xs font-bold uppercase tracking-wider border border-slate-100 flex items-center gap-2">
-                                                Easy
-                                            </span>
-                                        </div>
-
-                                        {/* Selection Ring Animation */}
-                                        {isSelected && (
-                                            <div className="absolute inset-0 border-4 border-indigo-500 rounded-[2.5rem] opacity-20 animate-ping pointer-events-none" />
-                                        )}
                                     </div>
                                 </div>
                             );
@@ -118,29 +95,21 @@ const HabitsPage = () => {
                 </main>
             </div>
 
-            {/* Floating Action Bar - Game Style */}
+            {/* Bottom Bar: Fixed, Utilitarian */}
             <div className={`
-                fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1)
-                ${selectedHabitsIds.length > 0 ? 'translate-y-0 opacity-100' : 'translate-y-[200%] opacity-0'}
+                fixed bottom-0 left-0 right-0 z-50 border-t border-slate-800 bg-[#020617]/90 backdrop-blur-xl transition-transform duration-300
+                ${selectedHabitsIds.length > 0 ? 'translate-y-0' : 'translate-y-full'}
             `}>
-                <div className="bg-slate-900/90 backdrop-blur-2xl text-white p-3 pr-4 rounded-full shadow-2xl shadow-indigo-500/30 flex items-center gap-6 border border-white/10 scale-110">
-                    <div className="flex items-center gap-4 pl-4">
-                        <div className="flex -space-x-2">
-                            {/* Decorative avatars representing selected habits could go here */}
-                            <div className="w-8 h-8 rounded-full bg-indigo-500 border-2 border-slate-900 flex items-center justify-center text-xs font-bold">
-                                {selectedHabitsIds.length}
-                            </div>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Ready to play?</span>
-                            <span className="text-sm font-bold text-white">Quests Active</span>
-                        </div>
+                <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm font-medium text-slate-400">
+                            <span className="text-white font-bold">{selectedHabitsIds.length}</span> items selected
+                        </span>
                     </div>
                     
                     <Link to="/" onClick={handleClickStart}>
-                        <button className="bg-white text-indigo-900 px-8 py-3 rounded-full font-black text-sm uppercase tracking-wide hover:scale-105 active:scale-95 transition-transform shadow-lg flex items-center gap-2 group">
-                            <Sparkles className="w-4 h-4 text-amber-500 group-hover:rotate-12 transition-transform" />
-                            Start Journey
+                        <button className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center gap-2">
+                            Initialize Dashboard <ArrowRight className="w-4 h-4" />
                         </button>
                     </Link>
                 </div>
