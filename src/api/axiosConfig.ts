@@ -33,9 +33,6 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // --- FIX IS HERE ---
-        // Check if the request is NOT for login or register before trying to refresh.
-        // If the error comes from /login, we want to let the LoginPage handle it (show "Wrong Password")
         if (
             error.response?.status === 401 &&
             !originalRequest._retry &&
@@ -66,7 +63,7 @@ api.interceptors.response.use(
                     throw new Error("No refresh token");
                 }
 
-                const res = await axios.post("http://localhost:5000/api/auth/refresh-token", { refreshToken });
+                const res = await axios.post("https://build-me-habit-builder-be.vercel.app/api/auth/refresh-token", { refreshToken });
 
                 const { accessToken } = res.data;
 
