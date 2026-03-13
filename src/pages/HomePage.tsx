@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { Flame, Activity, LayoutDashboard, Calendar } from 'lucide-react';
+import { Flame, Activity, LayoutDashboard, Calendar, LogOut } from 'lucide-react';
 import SelectedHabbits from '../components/SelectedHabbits';
 import habitsForHomePage from '../data/HabitsListForHomePage';
 import SleepForm from '../components/forms/SleepForm';
@@ -48,6 +48,16 @@ const HomePage = () => {
         if (accessToken) getAllLogs();
     }, []);
 
+    // Logout Button Handler
+    const handleLogout = () => {
+        // Clear user session
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
+        // Redirect to login page
+        window.location.href = "/login";
+    }
+
     if (!currentHabit) return <div className="min-h-screen flex items-center justify-center bg-[#09090b] text-zinc-500 font-mono text-sm">Loading workspace...</div>;
 
     return (
@@ -60,7 +70,7 @@ const HomePage = () => {
                         <div className="w-8 h-8 bg-zinc-900 border border-zinc-700 rounded-lg flex items-center justify-center">
                             <LayoutDashboard className="w-4 h-4 text-white" />
                         </div>
-                        <span className="font-semibold text-white tracking-tight">HabitOS</span>
+                        <span className="font-semibold text-white tracking-tight">BuildME</span>
                         <span className="text-zinc-600">/</span>
                         <span className="text-zinc-400 font-medium">Dashboard</span>
                     </div>
@@ -78,6 +88,13 @@ const HomePage = () => {
                             <span className="text-emerald-500 font-medium">Active</span>
                         </div>
                     </div>
+                    {/* Logout Button */}
+                    <button 
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-slate-400 hover:text-red-400 transition-all duration-300 group">
+                        <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                        Logout
+                    </button>
                 </div>
             </nav>
 
