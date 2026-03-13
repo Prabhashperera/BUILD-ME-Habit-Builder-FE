@@ -1,4 +1,4 @@
-import { User, Bell, Activity, LogOut } from 'lucide-react';
+import { User, Bell, Activity } from 'lucide-react';
 
 function Navbar() {
 
